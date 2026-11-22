@@ -5,7 +5,7 @@
  * It must NEVER perform numerical calculations.
  *
  * Request body: { module, inputs, results, steps }
- * Response:     { explanation: string }
+ * Response:     { explanation: string, offline?: boolean }
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -31,6 +31,7 @@ const OFFLINE_EXPLANATIONS: Record<string, string> = {
 };
 
 export async function POST(req: NextRequest) {
+  let reqModule = "clutch";
   try {
     const body = await req.json();
     const { module, inputs, results, steps } = body as {
@@ -39,22 +40,22 @@ export async function POST(req: NextRequest) {
       results: object;
       steps: string[];
     };
+    reqModule = module || "clutch";
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      const fallback = OFFLINE_EXPLANATIONS[module] ?? OFFLINE_EXPLANATIONS.clutch;
+      const fallback = OFFLINE_EXPLANATIONS[reqModule] ?? OFFLINE_EXPLANATIONS.clutch;
       return NextResponse.json({ explanation: fallback, offline: true });
     }
 
-    const modelName = process.env.GEMINI_MODEL || "gemini-2.0-flash";
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: modelName,
-      safetySettings: [
-        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
-      ],
-    });
+    const candidateModels = Array.from(new Set([
+      process.env.GEMINI_MODEL,
+      "gemini-flash-lite-latest",
+      "gemini-3.8-flash",
+      "gemini-2.5-flash-lite",
+    ].filter(Boolean))) as string[];
 
+    const genAI = new GoogleGenerativeAI(apiKey);
     const prompt = `${EXPLAIN_SYSTEM}
 
 Module: ${module}
@@ -65,12 +66,29 @@ ${(steps || []).slice(0, 15).join("\n")}
 
 Please explain these results in plain English for a DME student.`;
 
-    const response = await model.generateContent(prompt);
-    const explanation = response.response.text().trim();
+    for (const modelName of candidateModels) {
+      try {
+        const model = genAI.getGenerativeModel({
+          model: modelName,
+          safetySettings: [
+            { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
+          ],
+        });
 
-    return NextResponse.json({ explanation });
+        const response = await model.generateContent(prompt);
+        const explanation = response.response.text().trim();
+        return NextResponse.json({ explanation });
+      } catch (err: any) {
+        console.warn(`[API /explain] Model ${modelName} failed:`, err.message);
+      }
+    }
+
+    // Fallback if all models failed
+    const fallback = OFFLINE_EXPLANATIONS[reqModule] ?? OFFLINE_EXPLANATIONS.clutch;
+    return NextResponse.json({ explanation: fallback, offline: true });
   } catch (err: any) {
-    console.error("[/api/explain]", err);
-    return NextResponse.json({ error: err.message || "Internal error" }, { status: 500 });
+    console.error("[/api/explain critical]", err);
+    const fallback = OFFLINE_EXPLANATIONS[reqModule] ?? OFFLINE_EXPLANATIONS.clutch;
+    return NextResponse.json({ explanation: fallback, offline: true });
   }
 }
