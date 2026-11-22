@@ -41,6 +41,9 @@ const config: Config = {
         thermal: "0 0 25px -5px rgba(255, 106, 61, 0.3)",
         cyanGlow: "0 0 25px -5px rgba(111, 211, 232, 0.25)",
       },
+      animation: {
+        'spin-slow': 'spin 12s linear infinite',
+      },
     },
   },
   plugins: [],

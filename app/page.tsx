@@ -1,12 +1,65 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Navbar, ActiveTab } from "@/components/common/Navbar";
 import { ClutchStudio } from "@/components/clutch/ClutchStudio";
-import { Layers, Disc, RotateCcw, BookOpen, Printer } from "lucide-react";
+import { BlockBrakeStudio } from "@/components/brake/BlockBrakeStudio";
+import { BandBrakeStudio } from "@/components/brake/BandBrakeStudio";
+import { CourseGallery } from "@/components/gallery/CourseGallery";
+import { PrintReport } from "@/components/report/PrintReport";
+import { AiParserModal } from "@/components/common/AiParserModal";
+import { extractScenarioFromUrl } from "@/lib/scenario";
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("clutch");
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+
+  // Preset triggers — a string token that changes causes the studio useEffect to fire
+  const [clutchPreset, setClutchPreset] = useState<string | undefined>(undefined);
+  const [blockPreset, setBlockPreset] = useState<string | undefined>(undefined);
+  const [bandPreset, setBandPreset] = useState<string | undefined>(undefined);
+
+  // AI-parsed inputs to inject (optional — studios can consume in future iteration)
+  const [aiInputs, setAiInputs] = useState<Record<string, unknown> | null>(null);
+
+  // On mount: check for ?scenario= URL param and restore session
+  useEffect(() => {
+    const scenario = extractScenarioFromUrl();
+    if (scenario) {
+      setActiveTab(scenario.module as ActiveTab);
+      // Trigger the matching studio's preset if the scenario carries a code
+      if (scenario.inputs && (scenario.inputs as any).__presetCode) {
+        const code = (scenario.inputs as any).__presetCode as string;
+        if (["C1","C2","C3","C4","C5"].includes(code)) setClutchPreset(code + "_" + Date.now());
+        if (["B1","B2","B3","B4"].includes(code)) setBlockPreset(code + "_" + Date.now());
+        if (["BB1","BB2","BB3"].includes(code)) setBandPreset(code + "_" + Date.now());
+      }
+    }
+  }, []);
+
+  /** Called by CourseGallery when user clicks a problem card. */
+  const handleSelectProblem = useCallback(
+    (module: "clutch" | "block_brake" | "band_brake", presetCode: string) => {
+      setActiveTab(module);
+      // Append timestamp so the same preset can be re-triggered
+      const token = presetCode + "_" + Date.now();
+      if (module === "clutch") setClutchPreset(token);
+      if (module === "block_brake") setBlockPreset(token);
+      if (module === "band_brake") setBandPreset(token);
+    },
+    []
+  );
+
+  /** Called by AiParserModal when "Apply to Studio" is clicked. */
+  const handleApplyAi = useCallback(
+    (module: "clutch" | "block_brake" | "band_brake", inputs: Record<string, number | null>) => {
+      setActiveTab(module);
+      setAiInputs(inputs);
+      // Studios will need to be enhanced to consume aiInputs in a future iteration.
+      // For now, store in state so it's accessible to the active studio.
+    },
+    []
+  );
 
   return (
     <div className="min-h-screen bg-[#070b14] flex flex-col">
@@ -14,51 +67,35 @@ export default function HomePage() {
       <Navbar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
-        onOpenAiModal={() => alert("AI Problem Parser will be activated in Phase 6.")}
+        onOpenAiModal={() => setIsAiModalOpen(true)}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
-        {activeTab === "clutch" && <ClutchStudio />}
+        {activeTab === "clutch" && (
+          <ClutchStudio
+            triggerPreset={clutchPreset}
+          />
+        )}
 
         {activeTab === "block_brake" && (
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-8 text-center text-slate-400">
-            <RotateCcw className="mx-auto h-12 w-12 text-amber-500 mb-3 animate-spin-slow" />
-            <h3 className="text-lg font-bold text-white">Block (Shoe) Brake Studio</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Ready for Phase 4 implementation: Cases 1, 2, 3 geometry selector, CW/CCW moment equilibrium, rotating drum SVG with ember heat glow, and self-locking detection.
-            </p>
-          </div>
+          <BlockBrakeStudio
+            triggerPreset={blockPreset}
+          />
         )}
 
         {activeTab === "band_brake" && (
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-8 text-center text-slate-400">
-            <Disc className="mx-auto h-12 w-12 text-emerald-500 mb-3 animate-pulse" />
-            <h3 className="text-lg font-bold text-white">Band Brake Studio</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Ready for Phase 4 implementation: Simple & Differential band brakes, wrap angle arc SVG, band sizing (thickness h, width b&apos;), and lever cross-section design.
-            </p>
-          </div>
+          <BandBrakeStudio
+            triggerPreset={bandPreset}
+          />
         )}
 
         {activeTab === "gallery" && (
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-8 text-center text-slate-400">
-            <BookOpen className="mx-auto h-12 w-12 text-purple-500 mb-3" />
-            <h3 className="text-lg font-bold text-white">Course Question Gallery (12 Problems)</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Coming in Phase 5: 1-click loading for all review problems, Minor II questions, and ESA examination questions.
-            </p>
-          </div>
+          <CourseGallery onSelectProblem={handleSelectProblem} />
         )}
 
         {activeTab === "report" && (
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-8 text-center text-slate-400">
-            <Printer className="mx-auto h-12 w-12 text-rose-500 mb-3" />
-            <h3 className="text-lg font-bold text-white">Printable 2-Page Documentation Report</h3>
-            <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-              Coming in Phase 7: Academic documentation report formatted for exact 2-page print & PDF submission.
-            </p>
-          </div>
+          <PrintReport />
         )}
       </main>
 
@@ -68,9 +105,16 @@ export default function HomePage() {
           GripLab &bull; 23EMEC301 Design of Machine Elements &bull; School of Mechanical Engineering, KLE Technological University
         </p>
         <p className="mt-0.5 text-slate-400">
-          Formulas verified against Design Data Handbook (4th Ed) by K. Mahadevan & K. Balaveera Reddy.
+          Formulas verified against Design Data Handbook (4th Ed) by K. Mahadevan &amp; K. Balaveera Reddy.
         </p>
       </footer>
+
+      {/* AI Parser Modal (Phase 6) */}
+      <AiParserModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onApply={handleApplyAi}
+      />
     </div>
   );
 }

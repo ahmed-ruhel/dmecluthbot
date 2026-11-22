@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { calculateClutch, ClutchInputs } from "@/lib/engine/clutch";
 import { ClutchSolveMode, ClutchTheory } from "@/lib/engine/types";
 import { evaluateExpression, formatNum } from "@/lib/engine/units";
@@ -8,6 +8,7 @@ import { ClutchDiagramSvg } from "./ClutchDiagramSvg";
 import { ClutchWhatIfCurve } from "./ClutchWhatIfCurve";
 import { StepDisplay } from "@/components/common/StepDisplay";
 import { MaterialSelectorModal } from "@/components/common/MaterialSelectorModal";
+import { ScenarioControls } from "@/components/common/ScenarioControls";
 import {
   Layers,
   Sparkles,
@@ -19,7 +20,11 @@ import {
   Zap,
 } from "lucide-react";
 
-export const ClutchStudio: React.FC = () => {
+interface ClutchStudioProps {
+  triggerPreset?: string;
+}
+
+export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => {
   // Solve mode and theory
   const [mode, setMode] = useState<ClutchSolveMode>("sizing");
   const [theory, setTheory] = useState<ClutchTheory>("uniform_wear");
@@ -201,6 +206,16 @@ export const ClutchStudio: React.FC = () => {
     }
   };
 
+  // Allow parent (gallery) to trigger a preset by name
+  useEffect(() => {
+    if (triggerPreset && ["C1","C2","C3","C4","C5"].includes(triggerPreset)) {
+      loadPreset(triggerPreset as "C1" | "C2" | "C3" | "C4" | "C5");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [triggerPreset]);
+
+  const s = result.success && result.summary ? result.summary : null;
+
   return (
     <div className="space-y-6">
       {/* Module Title & Preset Bar */}
@@ -220,19 +235,25 @@ export const ClutchStudio: React.FC = () => {
           </p>
         </div>
 
-        {/* Preset Quick-Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono uppercase text-slate-400 mr-1">Exam Presets:</span>
-          {(["C1", "C2", "C3", "C4", "C5"] as const).map((p) => (
-            <button
-              key={p}
-              onClick={() => loadPreset(p)}
-              className="rounded-lg border border-slate-800 bg-slate-900/80 px-2.5 py-1 text-xs font-mono font-semibold text-slate-300 hover:border-cyan-500 hover:bg-cyan-950/40 hover:text-cyan-300 transition-all"
-            >
-              {p}
-            </button>
-          ))}
-        </div>
+          {/* Preset Quick-Buttons & Scenario */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[11px] font-mono uppercase text-slate-400 mr-1">Exam Presets:</span>
+            {(["C1", "C2", "C3", "C4", "C5"] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => loadPreset(p)}
+                className="rounded-lg border border-slate-800 bg-slate-900/80 px-2.5 py-1 text-xs font-mono font-semibold text-slate-300 hover:border-cyan-500 hover:bg-cyan-950/40 hover:text-cyan-300 transition-all"
+              >
+                {p}
+              </button>
+            ))}
+            <div className="h-4 w-[1px] bg-slate-800 mx-1" />
+            <ScenarioControls
+              module="clutch"
+              inputs={{ ...inputs, mode, theory }}
+              summaryLine={s ? `Do=${formatNum(s.diaOuterMm)} mm, T=${formatNum(s.torqueNm)} N·m` : undefined}
+            />
+          </div>
       </div>
 
       {/* Control Bar: Mode & Theory Switchers */}
