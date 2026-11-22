@@ -31,7 +31,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
   const [compareBoth, setCompareBoth] = useState<boolean>(false);
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
 
-  // Form input strings (allow expressions like "9.55e6 * 8 / 1440")
+  // Form input strings
   const [inputs, setInputs] = useState({
     powerKw: "",
     speedRpm: "1440",
@@ -101,7 +101,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     }
   }, [compareBoth, parsedInputs, theory]);
 
-  // Quick preset loaders for Golden Tests C1-C5
+  // Presets loaders for C1-C5
   const loadPreset = (preset: "C1" | "C2" | "C3" | "C4" | "C5") => {
     if (preset === "C1") {
       setMode("sizing");
@@ -179,9 +179,9 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         diameterRatio: "",
         radialWidthFraction: "",
         axialForceLimitN: "",
-        numDrivingDiscs: "2",
-        numDrivenDiscs: "3",
-        numFrictionSurfaces: "",
+        numDrivingDiscs: "1",
+        numDrivenDiscs: "1",
+        numFrictionSurfaces: "2",
       });
     } else if (preset === "C5") {
       setMode("capacity");
@@ -208,8 +208,11 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
   // Allow parent (gallery) to trigger a preset by name
   useEffect(() => {
-    if (triggerPreset && ["C1","C2","C3","C4","C5"].includes(triggerPreset)) {
-      loadPreset(triggerPreset as "C1" | "C2" | "C3" | "C4" | "C5");
+    if (triggerPreset) {
+      const code = triggerPreset.split("_")[0];
+      if (["C1","C2","C3","C4","C5"].includes(code)) {
+        loadPreset(code as "C1" | "C2" | "C3" | "C4" | "C5");
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerPreset]);
@@ -217,50 +220,50 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Module Title & Preset Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-lg">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-700/50">
-              <Layers className="h-5 w-5" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe]">
+              <Layers className="h-4 w-4" />
             </span>
-            <h2 className="text-xl font-bold tracking-tight text-white">Clutch Studio</h2>
-            <span className="rounded bg-cyan-950 px-2.5 py-0.5 text-xs font-mono font-medium text-cyan-300 border border-cyan-800/60">
+            <h2 className="text-xl font-bold tracking-tight text-[#2d2f31]">Clutch Studio</h2>
+            <span className="rounded bg-[#f6efff] px-2.5 py-0.5 text-xs font-bold text-[#5624d0] border border-[#d8b4fe]">
               CO3 &bull; CO6
             </span>
           </div>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-[#6a6f73]">
             Single and multi-plate clutch force, torque, and sizing under Uniform Wear and Uniform Pressure theories.
           </p>
         </div>
 
-          {/* Preset Quick-Buttons & Scenario */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-mono uppercase text-slate-400 mr-1">Exam Presets:</span>
-            {(["C1", "C2", "C3", "C4", "C5"] as const).map((p) => (
-              <button
-                key={p}
-                onClick={() => loadPreset(p)}
-                className="rounded-lg border border-slate-800 bg-slate-900/80 px-2.5 py-1 text-xs font-mono font-semibold text-slate-300 hover:border-cyan-500 hover:bg-cyan-950/40 hover:text-cyan-300 transition-all"
-              >
-                {p}
-              </button>
-            ))}
-            <div className="h-4 w-[1px] bg-slate-800 mx-1" />
-            <ScenarioControls
-              module="clutch"
-              inputs={{ ...inputs, mode, theory }}
-              summaryLine={s ? `Do=${formatNum(s.diaOuterMm)} mm, T=${formatNum(s.torqueNm)} N·m` : undefined}
-            />
-          </div>
+        {/* Preset Quick-Buttons & Scenario Controls */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mr-1">Exam Presets:</span>
+          {(["C1", "C2", "C3", "C4", "C5"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => loadPreset(p)}
+              className="rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-mono font-bold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
+            >
+              {p}
+            </button>
+          ))}
+          <div className="h-4 w-[1px] bg-[#d1d7dc] mx-1" />
+          <ScenarioControls
+            module="clutch"
+            inputs={{ ...inputs, mode, theory }}
+            summaryLine={s ? `Do=${formatNum(s.diaOuterMm)} mm, T=${formatNum(s.torqueNm)} N·m` : undefined}
+          />
+        </div>
       </div>
 
       {/* Control Bar: Mode & Theory Switchers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Mode Selector */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-          <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 block">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 shadow-sm">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-2 block">
             Calculation Mode
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
@@ -273,10 +276,10 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               <button
                 key={m.id}
                 onClick={() => setMode(m.id as ClutchSolveMode)}
-                className={`rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all text-center ${
+                className={`rounded-md px-2 py-1.5 text-xs font-bold transition-all text-center ${
                   mode === m.id
-                    ? "bg-cyan-600 text-white shadow-sm shadow-cyan-600/30"
-                    : "bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800/60"
+                    ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                    : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#2d2f31]"
                 }`}
               >
                 {m.label}
@@ -286,59 +289,59 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         </div>
 
         {/* Theory Selector */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 shadow-sm">
           <div className="flex items-center justify-between mb-2">
-            <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73]">
               Theory Model
             </label>
-            <label className="flex items-center space-x-1.5 text-xs text-slate-300 cursor-pointer">
+            <label className="flex items-center space-x-1.5 text-xs text-[#2d2f31] cursor-pointer">
               <input
                 type="checkbox"
                 checked={compareBoth}
                 onChange={(e) => setCompareBoth(e.target.checked)}
-                className="rounded border-slate-700 bg-slate-800 text-cyan-600 focus:ring-cyan-500"
+                className="rounded border-[#d1d7dc] text-[#a435f0] focus:ring-[#a435f0]"
               />
-              <span className="text-[11px] font-medium text-cyan-400">Compare Wear vs. Pressure</span>
+              <span className="text-[11px] font-bold text-[#5624d0]">Compare Wear vs. Pressure</span>
             </label>
           </div>
           <div className="grid grid-cols-2 gap-1.5">
             <button
               onClick={() => setTheory("uniform_wear")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
                 theory === "uniform_wear"
-                  ? "bg-cyan-600 text-white shadow-sm shadow-cyan-600/30"
-                  : "bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800/60"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
               }`}
             >
               Uniform Wear (Standard &bull; Eq 13.9d)
             </button>
             <button
               onClick={() => setTheory("uniform_pressure")}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
                 theory === "uniform_pressure"
-                  ? "bg-cyan-600 text-white shadow-sm shadow-cyan-600/30"
-                  : "bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800/60"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
               }`}
             >
-              Uniform Pressure (New Clutch &bull; Eq 13.9a)
+              Uniform Pressure (New &bull; Eq 13.9a)
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Studio Grid: Inputs (Left) and Interactive Diagram / Results (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Input Form (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                <Sliders className="h-4 w-4 text-cyan-400" />
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3">
+              <h3 className="text-xs font-bold text-[#2d2f31] flex items-center space-x-2">
+                <Sliders className="h-4 w-4 text-[#a435f0]" />
                 <span>Parameter Inputs</span>
               </h3>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1 rounded-lg bg-cyan-950/60 border border-cyan-800/60 px-2 py-1 text-[11px] font-medium text-cyan-300 hover:bg-cyan-900/60"
+                className="flex items-center space-x-1 rounded-md bg-[#f6efff] border border-[#d8b4fe] px-2.5 py-1 text-[11px] font-bold text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
               >
                 <Sparkles className="h-3 w-3" />
                 <span>Pick Material</span>
@@ -350,46 +353,46 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               {/* Power / Speed / Torque Inputs */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 font-medium">Power P [kW]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Power P [kW]</label>
                   <input
                     type="text"
                     placeholder="e.g. 8 or 60"
                     value={inputs.powerKw}
                     onChange={(e) => handleInputChange("powerKw", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Speed N [rpm]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Speed N [rpm]</label>
                   <input
                     type="text"
                     placeholder="e.g. 1440 or 1000"
                     value={inputs.speedRpm}
                     onChange={(e) => handleInputChange("speedRpm", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 font-medium">Nominal Torque T [N·m]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Nominal Torque T [N·m]</label>
                   <input
                     type="text"
                     placeholder="e.g. 240"
                     value={inputs.torqueNm}
                     onChange={(e) => handleInputChange("torqueNm", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Factor of Safety (FoS)</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Factor of Safety (FoS)</label>
                   <input
                     type="text"
                     placeholder="1.0 or 2.5"
                     value={inputs.fos}
                     onChange={(e) => handleInputChange("fos", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
@@ -397,23 +400,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               {/* Friction & Pressure */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 font-medium">Friction Coeff &mu;</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Friction Coeff &mu;</label>
                   <input
                     type="text"
                     placeholder="0.25"
                     value={inputs.mu}
                     onChange={(e) => handleInputChange("mu", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Allowable Press p [MPa]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Allowable Press p [MPa]</label>
                   <input
                     type="text"
                     placeholder="0.35"
                     value={inputs.pAllowableMpa}
                     onChange={(e) => handleInputChange("pAllowableMpa", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
@@ -421,23 +424,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               {/* Diameters or Ratio */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 font-medium">Outer Dia Do [mm]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Outer Dia Do [mm]</label>
                   <input
                     type="text"
                     placeholder="e.g. 250 or solved"
                     value={inputs.diaOuterMm}
                     onChange={(e) => handleInputChange("diaOuterMm", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Inner Dia Di [mm]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Inner Dia Di [mm]</label>
                   <input
                     type="text"
                     placeholder="e.g. 150 or solved"
                     value={inputs.diaInnerMm}
                     onChange={(e) => handleInputChange("diaInnerMm", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
@@ -445,23 +448,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               {/* Diameter Ratio & Radial Width */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-400 font-medium">Ratio c = Di / Do</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Ratio c = Di / Do</label>
                   <input
                     type="text"
                     placeholder="0.5 or 0.577"
                     value={inputs.diameterRatio}
                     onChange={(e) => handleInputChange("diameterRatio", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Radial Width (b / Ro)</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Radial Width (b / Ro)</label>
                   <input
                     type="text"
                     placeholder="e.g. 0.2 (b=0.2Ro)"
                     value={inputs.radialWidthFraction}
                     onChange={(e) => handleInputChange("radialWidthFraction", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
@@ -469,47 +472,47 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               {/* Force Limit for Mode D */}
               {mode === "force_limited" && (
                 <div>
-                  <label className="text-slate-400 font-medium">Clamping Force Limit Fa [N]</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Clamping Force Limit Fa [N]</label>
                   <input
                     type="text"
                     placeholder="e.g. 600"
                     value={inputs.axialForceLimitN}
                     onChange={(e) => handleInputChange("axialForceLimitN", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-cyan-800 bg-slate-950 px-3 py-2 text-slate-100 font-mono text-xs focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d8b4fe] bg-[#f6efff]/40 px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               )}
 
               {/* Disc Stack: n1, n2, n' */}
-              <div className="grid grid-cols-3 gap-2 pt-1 border-t border-slate-800/80">
+              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#e4e8eb]">
                 <div>
-                  <label className="text-slate-400 font-medium">Driving n1</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Driving n1</label>
                   <input
                     type="text"
                     placeholder="e.g. 5"
                     value={inputs.numDrivingDiscs}
                     onChange={(e) => handleInputChange("numDrivingDiscs", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5 text-slate-100 font-mono text-xs text-center focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-2 py-1.5 text-[#2d2f31] font-mono text-xs text-center focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Driven n2</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Driven n2</label>
                   <input
                     type="text"
                     placeholder="e.g. 4"
                     value={inputs.numDrivenDiscs}
                     onChange={(e) => handleInputChange("numDrivenDiscs", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5 text-slate-100 font-mono text-xs text-center focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-2 py-1.5 text-[#2d2f31] font-mono text-xs text-center focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
                 <div>
-                  <label className="text-slate-400 font-medium">Surfaces n&apos;</label>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Surfaces n&apos;</label>
                   <input
                     type="text"
                     placeholder="Auto or n1+n2-1"
                     value={inputs.numFrictionSurfaces}
                     onChange={(e) => handleInputChange("numFrictionSurfaces", e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-2 py-1.5 text-slate-100 font-mono text-xs text-center focus:border-cyan-500 focus:outline-none"
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-2 py-1.5 text-[#2d2f31] font-mono text-xs text-center focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
               </div>
@@ -519,45 +522,45 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
           {/* Quick Summary Results Badges */}
           {result.success && result.summary && (
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Torque Capacity</span>
-                <p className="mt-1 text-lg font-bold text-cyan-400 font-mono">
-                  {formatNum(result.summary.torqueNm, 2)} <span className="text-xs font-normal text-slate-400">N·m</span>
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Torque Capacity</span>
+                <p className="mt-1 text-lg font-bold text-[#a435f0] font-mono">
+                  {formatNum(result.summary.torqueNm, 2)} <span className="text-xs font-normal text-[#6a6f73]">N·m</span>
                 </p>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-[#6a6f73] font-mono">
                   ({formatNum(result.summary.torqueNmm, 0)} N·mm)
                 </span>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Axial Clamping Fa</span>
-                <p className="mt-1 text-lg font-bold text-emerald-400 font-mono">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Axial Clamping Fa</span>
+                <p className="mt-1 text-lg font-bold text-[#1e6055] font-mono">
                   {formatNum(result.summary.actualAxialForceN || result.summary.axialForceN, 1)}{" "}
-                  <span className="text-xs font-normal text-slate-400">N</span>
+                  <span className="text-xs font-normal text-[#6a6f73]">N</span>
                 </p>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-[#6a6f73] font-mono">
                   n&apos; = {result.summary.numFrictionSurfaces} pairs
                 </span>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Dimensions (Do &times; Di)</span>
-                <p className="mt-1 text-sm font-bold text-white font-mono">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Dimensions (Do &times; Di)</span>
+                <p className="mt-1 text-sm font-bold text-[#2d2f31] font-mono">
                   {formatNum(result.summary.diaOuterMm, 1)} &times; {formatNum(result.summary.diaInnerMm, 1)}{" "}
-                  <span className="text-xs font-normal text-slate-400">mm</span>
+                  <span className="text-xs font-normal text-[#6a6f73]">mm</span>
                 </p>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-[#6a6f73] font-mono">
                   Dm = {formatNum(result.summary.meanDiaMm, 1)} mm
                 </span>
               </div>
 
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Working Pressure</span>
-                <p className="mt-1 text-sm font-bold text-amber-400 font-mono">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Working Pressure</span>
+                <p className="mt-1 text-sm font-bold text-[#b4690e] font-mono">
                   {formatNum(result.summary.maxPressureMpa, 4)}{" "}
-                  <span className="text-xs font-normal text-slate-400">MPa</span>
+                  <span className="text-xs font-normal text-[#6a6f73]">MPa</span>
                 </p>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-[#6a6f73] font-mono">
                   p_mean = {formatNum(result.summary.meanPressureMpa, 4)} MPa
                 </span>
               </div>
@@ -566,7 +569,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         </div>
 
         {/* Right Column: Visualizations & KaTeX Step Workings (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-5">
           {/* Interactive SVG Diagram */}
           {result.success && result.summary && (
             <ClutchDiagramSvg
@@ -583,10 +586,10 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
           {/* Side-by-Side Comparison Card if toggled */}
           {compareBoth && result.success && result.summary && compResult && compResult.success && compResult.summary && (
-            <div className="rounded-2xl border border-cyan-800/60 bg-cyan-950/20 p-4">
-              <div className="flex items-center space-x-2 border-b border-cyan-800/40 pb-2 mb-3">
-                <Scale className="h-4 w-4 text-cyan-400" />
-                <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+            <div className="rounded-xl border border-[#d8b4fe] bg-[#f6efff]/40 p-4 shadow-sm">
+              <div className="flex items-center space-x-2 border-b border-[#d8b4fe]/60 pb-2 mb-3">
+                <Scale className="h-4 w-4 text-[#a435f0]" />
+                <h4 className="text-xs font-bold text-[#2d2f31] uppercase tracking-wider">
                   Side-by-Side Theory Comparison (Uniform Wear vs. Uniform Pressure)
                 </h4>
               </div>
@@ -594,23 +597,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
                   <thead>
-                    <tr className="border-b border-slate-800 text-slate-400">
-                      <th className="py-1.5">Parameter</th>
-                      <th className="py-1.5 text-cyan-300">Uniform Wear</th>
-                      <th className="py-1.5 text-amber-300">Uniform Pressure</th>
-                      <th className="py-1.5 text-emerald-300">Delta %</th>
+                    <tr className="border-b border-[#d8b4fe]/60 text-[#6a6f73]">
+                      <th className="py-1.5 font-bold">Parameter</th>
+                      <th className="py-1.5 text-[#5624d0] font-bold">Uniform Wear</th>
+                      <th className="py-1.5 text-[#b4690e] font-bold">Uniform Pressure</th>
+                      <th className="py-1.5 text-[#1e6055] font-bold">Delta %</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/50 text-slate-200">
+                  <tbody className="divide-y divide-[#e4e8eb] text-[#2d2f31]">
                     <tr>
-                      <td className="py-1.5 text-slate-400 font-sans">Torque Capacity T</td>
-                      <td className="py-1.5 font-bold text-cyan-300">
+                      <td className="py-1.5 text-[#6a6f73] font-sans">Torque Capacity T</td>
+                      <td className="py-1.5 font-bold text-[#5624d0]">
                         {formatNum(theory === "uniform_wear" ? result.summary.torqueNm : compResult.summary.torqueNm, 2)} N·m
                       </td>
-                      <td className="py-1.5 font-bold text-amber-300">
+                      <td className="py-1.5 font-bold text-[#b4690e]">
                         {formatNum(theory === "uniform_pressure" ? result.summary.torqueNm : compResult.summary.torqueNm, 2)} N·m
                       </td>
-                      <td className="py-1.5 text-emerald-400 font-bold">
+                      <td className="py-1.5 text-[#1e6055] font-bold">
                         +
                         {formatNum(
                           Math.abs(
@@ -624,14 +627,14 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-1.5 text-slate-400 font-sans">Clamping Force Fa</td>
+                      <td className="py-1.5 text-[#6a6f73] font-sans">Clamping Force Fa</td>
                       <td className="py-1.5">
                         {formatNum(theory === "uniform_wear" ? result.summary.axialForceN : compResult.summary.axialForceN, 1)} N
                       </td>
                       <td className="py-1.5">
                         {formatNum(theory === "uniform_pressure" ? result.summary.axialForceN : compResult.summary.axialForceN, 1)} N
                       </td>
-                      <td className="py-1.5 text-slate-400">
+                      <td className="py-1.5 text-[#6a6f73]">
                         +
                         {formatNum(
                           Math.abs(
@@ -645,14 +648,14 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-1.5 text-slate-400 font-sans">Mean Diameter Dm</td>
+                      <td className="py-1.5 text-[#6a6f73] font-sans">Mean Diameter Dm</td>
                       <td className="py-1.5">
                         {formatNum(theory === "uniform_wear" ? result.summary.meanDiaMm : compResult.summary.meanDiaMm, 2)} mm
                       </td>
                       <td className="py-1.5">
                         {formatNum(theory === "uniform_pressure" ? result.summary.meanDiaMm : compResult.summary.meanDiaMm, 2)} mm
                       </td>
-                      <td className="py-1.5 text-slate-400">
+                      <td className="py-1.5 text-[#6a6f73]">
                         +
                         {formatNum(
                           Math.abs(
@@ -671,7 +674,6 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             </div>
           )}
 
-
           {/* What-If Sensitivity Curve */}
           {result.success && result.summary && (
             <ClutchWhatIfCurve
@@ -686,15 +688,15 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
           {/* Step-by-Step KaTeX Derivation Panel */}
           {result.success && (
-            <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3 mb-4">
                 <div>
-                  <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-[#2d2f31] flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#1e6055]" />
                     <span>Deterministic Mathematical Derivations</span>
                   </h3>
-                  <p className="text-[11px] text-slate-400">
-                    Formulas and step-by-step substitutions cited from Mahadevan & Reddy (4th Ed) and class lectures.
+                  <p className="text-[11px] text-[#6a6f73]">
+                    Formulas and step-by-step substitutions cited from Mahadevan &amp; Reddy (4th Ed) and class lectures.
                   </p>
                 </div>
               </div>

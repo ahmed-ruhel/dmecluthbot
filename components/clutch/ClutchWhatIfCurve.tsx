@@ -57,144 +57,106 @@ export const ClutchWhatIfCurve: React.FC<ClutchWhatIfCurveProps> = ({
   const scaleX = (c: number) => padL + ((c - 0.2) / (0.9 - 0.2)) * plotW;
   const scaleY = (T: number) => padT + plotH - (T / (points.maxT * 1.15)) * plotH;
 
-  // Build SVG polyline path
-  const pathD = points.pts
-    .map((pt, idx) => `${idx === 0 ? "M" : "L"} ${scaleX(pt.c).toFixed(1)} ${scaleY(pt.T_Nm).toFixed(1)}`)
-    .join(" ");
+  const pathD = points.pts.reduce((acc, p, i) => {
+    const x = scaleX(p.c);
+    const y = scaleY(p.T_Nm);
+    return i === 0 ? `M ${x} ${y}` : `${acc} L ${x} ${y}`;
+  }, "");
 
-  // Optimum point c = 0.577
-  const cOpt = 0.577;
-  const tOpt_Nmm = (1 / 8) * Math.PI * (mu || 0.25) * (nPrime || 4) * (pMax || 0.35) * Math.pow(Do || 200, 3) * (cOpt * (1 - cOpt * cOpt));
-  const tOpt_Nm = tOpt_Nmm / 1000;
-  const optX = scaleX(cOpt);
-  const optY = scaleY(tOpt_Nm);
-
-  // Current point
-  const curC = Math.max(0.2, Math.min(0.9, currentRatio || 0.5));
-  const curT_Nmm = (1 / 8) * Math.PI * (mu || 0.25) * (nPrime || 4) * (pMax || 0.35) * Math.pow(Do || 200, 3) * (curC * (1 - curC * curC));
-  const curT_Nm = curT_Nmm / 1000;
-  const curX = scaleX(curC);
-  const curY = scaleY(curT_Nm);
+  const optX = scaleX(0.577);
+  const curX = scaleX(Math.min(0.9, Math.max(0.2, currentRatio)));
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-[#060a12] p-4 shadow-xl">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2">
+    <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 shadow-sm space-y-2">
+      <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2">
         <div>
-          <h4 className="text-xs font-semibold text-slate-200">
-            What-If Parameter Curve: Torque vs. Diameter Ratio (Di / Do)
+          <h4 className="text-xs font-bold text-[#2d2f31]">
+            Parameter Sensitivity: Torque T vs Diameter Ratio (Di / Do)
           </h4>
-          <p className="text-[11px] text-slate-400">
-            Optimum torque occurs mathematically at <span className="text-cyan-400 font-mono">1/&radic;3 &approx; 0.577</span>
+          <p className="text-[11px] text-[#6a6f73]">
+            Analytical maximum at <span className="text-[#a435f0] font-bold">c = 1/√3 ≈ 0.577</span>. Class practice often uses <span className="font-bold text-[#b4690e]">0.5</span>.
           </p>
         </div>
-
-        <div className="flex items-center space-x-1.5 text-[11px]">
+        <div className="flex items-center space-x-1.5 text-[10px]">
           <button
             onClick={() => onSelectRatio && onSelectRatio(0.5)}
-            className={`rounded px-2 py-0.5 border transition-all ${
-              Math.abs(currentRatio - 0.5) < 0.01
-                ? "bg-amber-950/80 border-amber-600 text-amber-300 font-bold"
-                : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
-            }`}
+            className="rounded border border-[#d1d7dc] bg-[#f7f9fa] px-2 py-0.5 font-mono font-bold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0]"
           >
-            Class: 0.50
+            0.50 (Class)
           </button>
           <button
             onClick={() => onSelectRatio && onSelectRatio(0.577)}
-            className={`rounded px-2 py-0.5 border transition-all ${
-              Math.abs(currentRatio - 0.577) < 0.01
-                ? "bg-cyan-950/80 border-cyan-600 text-cyan-300 font-bold"
-                : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
-            }`}
+            className="rounded border border-[#d8b4fe] bg-[#f6efff] px-2 py-0.5 font-mono font-bold text-[#5624d0] hover:bg-[#a435f0] hover:text-white"
           >
-            Opt: 0.577
+            0.577 (Optimum)
           </button>
         </div>
       </div>
 
       <div className="relative">
-        <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full h-auto select-none">
-          <defs>
-            <linearGradient id="curveFill" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.0" />
-            </linearGradient>
-          </defs>
-
+        <svg viewBox={`0 0 ${svgW} ${svgH}`} className="w-full h-auto select-none font-sans bg-[#f7f9fa] rounded-lg border border-[#e4e8eb]">
           {/* Grid lines */}
-          {[0.2, 0.4, 0.6, 0.8].map((c) => (
-            <g key={c}>
-              <line
-                x1={scaleX(c)}
-                y1={padT}
-                x2={scaleX(c)}
-                y2={padT + plotH}
-                stroke="#1e293b"
-                strokeDasharray="2 2"
-              />
-              <text
-                x={scaleX(c)}
-                y={padT + plotH + 16}
-                fill="#64748b"
-                fontSize="9"
-                textAnchor="middle"
-                fontFamily="monospace"
-              >
-                {c.toFixed(1)}
-              </text>
-            </g>
+          {[0.3, 0.5, 0.577, 0.7, 0.8].map((c) => (
+            <line
+              key={c}
+              x1={scaleX(c)}
+              y1={padT}
+              x2={scaleX(c)}
+              y2={padT + plotH}
+              stroke="#e4e8eb"
+              strokeWidth="1"
+            />
           ))}
 
-          {/* Torque ticks */}
-          {[0, 0.5, 1.0].map((frac) => {
-            const val = points.maxT * frac;
-            const y = scaleY(val);
-            return (
-              <g key={frac}>
-                <line x1={padL} y1={y} x2={padL + plotW} y2={y} stroke="#1e293b" strokeDasharray="2 2" />
-                <text x={padL - 6} y={y + 3} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="monospace">
-                  {val.toFixed(0)}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Area under curve */}
+          {/* Torque vs c Area fill and Polyline */}
           <path
             d={`${pathD} L ${scaleX(0.9)} ${padT + plotH} L ${scaleX(0.2)} ${padT + plotH} Z`}
-            fill="url(#curveFill)"
+            fill="#f6efff"
           />
+          <path d={pathD} fill="none" stroke="#a435f0" strokeWidth="2.5" />
 
-          {/* Main Curve */}
-          <path d={pathD} fill="none" stroke="#06b6d4" strokeWidth="2.5" strokeLinecap="round" />
-
-          {/* Optimum Point Marker (0.577) */}
-          <line x1={optX} y1={optY} x2={optX} y2={padT + plotH} stroke="#06b6d4" strokeDasharray="3 3" />
-          <circle cx={optX} cy={optY} r="5" fill="#06b6d4" stroke="#ffffff" strokeWidth="1.5" />
-          <text x={optX} y={optY - 8} fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-            Optimum (0.577)
+          {/* 0.577 Optimum Guideline */}
+          <line
+            x1={optX}
+            y1={padT}
+            x2={optX}
+            y2={padT + plotH}
+            stroke="#a435f0"
+            strokeWidth="1.5"
+            strokeDasharray="3 3"
+          />
+          <text x={optX} y={padT - 6} fill="#a435f0" fontSize="9" textAnchor="middle" fontWeight="bold">
+            Opt 0.577
           </text>
 
-          {/* Current Operating Point Marker */}
-          <circle cx={curX} cy={curY} r="6" fill="#f59e0b" stroke="#ffffff" strokeWidth="2" />
-          <text x={curX} y={curY - 10} fill="#fbbf24" fontSize="9" fontWeight="bold" textAnchor="middle" fontFamily="monospace">
-            Active: {formatNum(curT_Nm, 1)} N·m
+          {/* Current Ratio Marker */}
+          <line
+            x1={curX}
+            y1={padT}
+            x2={curX}
+            y2={padT + plotH}
+            stroke="#b4690e"
+            strokeWidth="2"
+          />
+          <circle cx={curX} cy={scaleY(points.pts.find((p) => Math.abs(p.c - currentRatio) < 0.03)?.T_Nm || 0)} r="4" fill="#b4690e" stroke="#ffffff" strokeWidth="1.5" />
+          <text x={curX} y={padT + plotH + 20} fill="#b4690e" fontSize="9" textAnchor="middle" fontWeight="bold">
+            Current ({currentRatio.toFixed(2)})
           </text>
 
           {/* Axis labels */}
-          <text x={padL + plotW / 2} y={svgH - 4} fill="#94a3b8" fontSize="10" textAnchor="middle">
-            Diameter Ratio (c = Di / Do)
+          <text x={svgW / 2} y={svgH - 5} fill="#6a6f73" fontSize="10" textAnchor="middle" fontWeight="bold">
+            Diameter Ratio c = Di / Do
           </text>
-          <text
-            x={12}
-            y={padT + plotH / 2}
-            fill="#94a3b8"
-            fontSize="10"
-            textAnchor="middle"
-            transform={`rotate(-90 12 ${padT + plotH / 2})`}
-          >
+          <text x={12} y={padT + plotH / 2} fill="#6a6f73" fontSize="10" textAnchor="middle" transform={`rotate(-90, 12, ${padT + plotH / 2})`} fontWeight="bold">
             Torque T [N·m]
           </text>
+
+          {/* X ticks */}
+          {[0.2, 0.4, 0.6, 0.8].map((c) => (
+            <text key={c} x={scaleX(c)} y={padT + plotH + 12} fill="#6a6f73" fontSize="9" textAnchor="middle" fontFamily="monospace">
+              {c.toFixed(1)}
+            </text>
+          ))}
         </svg>
       </div>
     </div>

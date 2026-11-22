@@ -14,12 +14,12 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("clutch");
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
 
-  // Preset triggers — a string token that changes causes the studio useEffect to fire
+  // Preset triggers — token change triggers studio useEffect
   const [clutchPreset, setClutchPreset] = useState<string | undefined>(undefined);
   const [blockPreset, setBlockPreset] = useState<string | undefined>(undefined);
   const [bandPreset, setBandPreset] = useState<string | undefined>(undefined);
 
-  // AI-parsed inputs to inject (optional — studios can consume in future iteration)
+  // AI-parsed inputs
   const [aiInputs, setAiInputs] = useState<Record<string, unknown> | null>(null);
 
   // On mount: check for ?scenario= URL param and restore session
@@ -27,7 +27,6 @@ export default function HomePage() {
     const scenario = extractScenarioFromUrl();
     if (scenario) {
       setActiveTab(scenario.module as ActiveTab);
-      // Trigger the matching studio's preset if the scenario carries a code
       if (scenario.inputs && (scenario.inputs as any).__presetCode) {
         const code = (scenario.inputs as any).__presetCode as string;
         if (["C1","C2","C3","C4","C5"].includes(code)) setClutchPreset(code + "_" + Date.now());
@@ -41,7 +40,6 @@ export default function HomePage() {
   const handleSelectProblem = useCallback(
     (module: "clutch" | "block_brake" | "band_brake", presetCode: string) => {
       setActiveTab(module);
-      // Append timestamp so the same preset can be re-triggered
       const token = presetCode + "_" + Date.now();
       if (module === "clutch") setClutchPreset(token);
       if (module === "block_brake") setBlockPreset(token);
@@ -55,14 +53,12 @@ export default function HomePage() {
     (module: "clutch" | "block_brake" | "band_brake", inputs: Record<string, number | null>) => {
       setActiveTab(module);
       setAiInputs(inputs);
-      // Studios will need to be enhanced to consume aiInputs in a future iteration.
-      // For now, store in state so it's accessible to the active studio.
     },
     []
   );
 
   return (
-    <div className="min-h-screen bg-[#070b14] flex flex-col">
+    <div className="min-h-screen bg-[#f7f9fa] text-[#2d2f31] flex flex-col font-sans">
       {/* Global Navigation Bar */}
       <Navbar
         activeTab={activeTab}
@@ -70,8 +66,8 @@ export default function HomePage() {
         onOpenAiModal={() => setIsAiModalOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 mx-auto w-full max-w-7xl px-4 py-6 sm:px-6">
+      {/* Main Content Area: Fluid Edge-to-Edge (unwanted extreme left/right margins removed) */}
+      <main className="flex-1 w-full px-3 sm:px-6 lg:px-8 py-5">
         {activeTab === "clutch" && (
           <ClutchStudio
             triggerPreset={clutchPreset}
@@ -100,16 +96,18 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#090d16] py-4 text-center text-[11px] text-slate-400">
-        <p>
-          GripLab &bull; 23EMEC301 Design of Machine Elements &bull; School of Mechanical Engineering, KLE Technological University
-        </p>
-        <p className="mt-0.5 text-slate-400">
-          Formulas verified against Design Data Handbook (4th Ed) by K. Mahadevan &amp; K. Balaveera Reddy.
-        </p>
+      <footer className="border-t border-[#d1d7dc] bg-white py-4 text-center text-xs text-[#6a6f73]">
+        <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="font-medium text-[#2d2f31]">
+            GripLab &bull; 23EMEC301 Design of Machine Elements &bull; School of Mechanical Engineering, KLE Technological University
+          </p>
+          <p className="text-[11px] text-[#6a6f73]">
+            Verified against Design Data Handbook (4th Ed) by K. Mahadevan &amp; K. Balaveera Reddy.
+          </p>
+        </div>
       </footer>
 
-      {/* AI Parser Modal (Phase 6) */}
+      {/* AI Parser Modal */}
       <AiParserModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}

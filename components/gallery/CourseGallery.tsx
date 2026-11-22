@@ -2,22 +2,31 @@
 
 import React from "react";
 import { GALLERY_PROBLEMS } from "@/data/gallery-problems";
-import { BookOpen, Layers, RotateCcw, Disc, ChevronRight, AlertTriangle } from "lucide-react";
+import { BookOpen, Layers, RotateCcw, Disc, ChevronRight, AlertTriangle, Star } from "lucide-react";
 
 interface CourseGalleryProps {
   onSelectProblem: (moduleId: "clutch" | "block_brake" | "band_brake", presetCode: string) => void;
 }
 
-const moduleIcons = {
-  clutch: <Layers className="h-4 w-4 text-cyan-400" />,
-  block_brake: <RotateCcw className="h-4 w-4 text-amber-400" />,
-  band_brake: <Disc className="h-4 w-4 text-emerald-400" />,
-};
-
-const moduleColors = {
-  clutch: { badge: "bg-cyan-950/80 border-cyan-800 text-cyan-300", hover: "hover:border-cyan-600/60" },
-  block_brake: { badge: "bg-amber-950/80 border-amber-800 text-amber-300", hover: "hover:border-amber-600/60" },
-  band_brake: { badge: "bg-emerald-950/80 border-emerald-800 text-emerald-300", hover: "hover:border-emerald-600/60" },
+const moduleTheme = {
+  clutch: {
+    name: "Clutch Design",
+    gradient: "from-[#5624d0] to-[#a435f0]",
+    badge: "bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe]",
+    icon: <Layers className="h-4 w-4 text-[#a435f0]" />,
+  },
+  block_brake: {
+    name: "Block Brake",
+    gradient: "from-[#b4690e] to-[#f59e0b]",
+    badge: "bg-[#fef3c7] text-[#92400e] border border-[#fde68a]",
+    icon: <RotateCcw className="h-4 w-4 text-[#b4690e]" />,
+  },
+  band_brake: {
+    name: "Band Brake",
+    gradient: "from-[#1e6055] to-[#10b981]",
+    badge: "bg-[#ecfdf5] text-[#065f46] border border-[#a7f3d0]",
+    icon: <Disc className="h-4 w-4 text-[#1e6055]" />,
+  },
 };
 
 export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem }) => {
@@ -30,83 +39,128 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
     module: "clutch" | "block_brake" | "band_brake",
     problems: typeof GALLERY_PROBLEMS
   ) => (
-    <div className="space-y-3">
-      <div className="flex items-center space-x-2 pb-1 border-b border-slate-800/80">
-        {moduleIcons[module]}
-        <h3 className="text-sm font-bold text-white">{title}</h3>
-        <span className="text-xs text-slate-500">({problems.length} problems)</span>
-      </div>
-      {problems.map((p) => (
-        <div
-          key={p.id}
-          className={`group rounded-xl border border-slate-800 bg-[#070c16] p-4 cursor-pointer transition-all ${moduleColors[module].hover} hover:bg-slate-900/60`}
-          onClick={() => onSelectProblem(p.module, p.id)}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-1.5">
-                <span className={`rounded-md border px-2 py-0.5 text-[11px] font-bold font-mono ${moduleColors[module].badge}`}>
-                  {p.code}
-                </span>
-                <h4 className="text-sm font-semibold text-slate-100">{p.title}</h4>
-              </div>
-              <p className="text-xs text-slate-400 mb-2 leading-relaxed">{p.description}</p>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] font-mono text-slate-500">📚 {p.source}</span>
-                {(p.code === "B3" || p.code === "B4" || p.code === "C4" || p.code === "BB3") && (
-                  <span className="flex items-center space-x-0.5 text-[10px] text-amber-400 font-semibold">
-                    <AlertTriangle className="h-3 w-3" />
-                    <span>Errata Example</span>
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <div className="text-[11px] font-mono text-slate-500 mb-1.5">Expected:</div>
-              <div className="text-[11px] font-mono text-emerald-400 max-w-[180px] text-right">{p.keyResults}</div>
-              <div className="mt-2 flex items-center justify-end space-x-1 text-slate-400 group-hover:text-cyan-400 transition-colors">
-                <span className="text-xs">Load →</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </div>
-            </div>
-          </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between pb-2 border-b border-[#e4e8eb]">
+        <div className="flex items-center space-x-2">
+          {moduleTheme[module].icon}
+          <h3 className="text-base font-bold text-[#2d2f31]">{title}</h3>
+          <span className="text-xs text-[#6a6f73]">({problems.length} problems)</span>
         </div>
-      ))}
+        <span className="text-xs font-semibold text-[#a435f0]">1-Click Solve &bull; Full Working</span>
+      </div>
+
+      {/* Udemy-style Card Grid (matching uploaded screenshot) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {problems.map((p) => {
+          const isErrata = p.code === "B3" || p.code === "B4" || p.code === "C4" || p.code === "BB3";
+          return (
+            <div
+              key={p.id}
+              className="group flex flex-col justify-between rounded-lg border border-[#d1d7dc] bg-white p-4 cursor-pointer hover:shadow-md transition-all hover:border-[#a435f0]"
+              onClick={() => onSelectProblem(p.module, p.id)}
+            >
+              <div>
+                {/* Course Thumbnail Banner */}
+                <div className={`h-24 rounded-md bg-gradient-to-tr ${moduleTheme[module].gradient} p-3 text-white flex flex-col justify-between shadow-sm mb-3`}>
+                  <div className="flex items-center justify-between">
+                    <span className="rounded bg-black/30 backdrop-blur-sm px-2 py-0.5 text-[10px] font-mono font-bold tracking-wider uppercase text-white">
+                      {p.code}
+                    </span>
+                    <span className="text-[10px] font-semibold text-white/90">23EMEC301</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold leading-tight line-clamp-1 text-white">{p.title}</span>
+                    <span className="text-[10px] text-white/80 block mt-0.5">{moduleTheme[module].name}</span>
+                  </div>
+                </div>
+
+                {/* Title & Description */}
+                <h4 className="text-sm font-bold text-[#2d2f31] group-hover:text-[#a435f0] line-clamp-2 leading-snug mb-1">
+                  {p.title}
+                </h4>
+                <p className="text-[11px] text-[#6a6f73] line-clamp-2 leading-relaxed mb-2.5">
+                  {p.description}
+                </p>
+
+                {/* Source & Rating */}
+                <div className="flex items-center space-x-1.5 text-[11px] text-[#6a6f73] mb-2">
+                  <span className="font-semibold text-[#b4690e]">4.9</span>
+                  <div className="flex items-center text-[#e59819]">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="h-3 w-3 fill-current" />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-[#919496] font-mono">({p.source})</span>
+                </div>
+              </div>
+
+              {/* Badges & Key Result (Udemy Price Tag Style) */}
+              <div className="pt-2 border-t border-[#f0f2f5] mt-2">
+                <div className="flex items-center justify-between gap-1 mb-1.5">
+                  {isErrata ? (
+                    <span className="inline-flex items-center space-x-1 rounded bg-[#eceb98] px-2 py-0.5 text-[10px] font-bold text-[#3d3c0a]">
+                      <AlertTriangle className="h-3 w-3" />
+                      <span>Errata Corrected</span>
+                    </span>
+                  ) : (
+                    <span className="rounded bg-[#eceb98] px-2 py-0.5 text-[10px] font-bold text-[#3d3c0a]">
+                      Bestseller Exam Q
+                    </span>
+                  )}
+                  <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold font-mono ${moduleTheme[module].badge}`}>
+                    {p.code}
+                  </span>
+                </div>
+
+                <div className="text-[11px] font-mono font-bold text-[#2d2f31] bg-[#f7f9fa] p-1.5 rounded border border-[#e4e8eb] truncate">
+                  🎯 {p.keyResults}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-6 shadow-lg">
-        <div className="flex items-center space-x-3 mb-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-600/20 text-purple-400 border border-purple-700/50">
-            <BookOpen className="h-5 w-5" />
+    <div className="space-y-8">
+      {/* Gallery Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe]">
+              <BookOpen className="h-4 w-4" />
+            </span>
+            <h2 className="text-xl font-bold tracking-tight text-[#2d2f31]">Course Question Gallery</h2>
+            <span className="rounded bg-[#eceb98] px-2 py-0.5 text-[11px] font-bold text-[#3d3c0a]">
+              12 Canonical Problems
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-[#6a6f73]">
+            Curated examination and review problems from course 23EMEC301. Click any card to load inputs into the studio.
+          </p>
+        </div>
+        <div className="flex items-center space-x-3 text-xs text-[#6a6f73]">
+          <span className="flex items-center space-x-1">
+            <span className="h-2 w-2 rounded-full bg-[#a435f0]" />
+            <span>Clutch (5)</span>
           </span>
-          <h2 className="text-xl font-bold text-white">Course Question Gallery</h2>
-          <span className="rounded bg-purple-950 px-2.5 py-0.5 text-xs font-mono font-medium text-purple-300 border border-purple-800/60">
-            12 Exam Problems
+          <span className="flex items-center space-x-1">
+            <span className="h-2 w-2 rounded-full bg-[#b4690e]" />
+            <span>Block Brake (4)</span>
+          </span>
+          <span className="flex items-center space-x-1">
+            <span className="h-2 w-2 rounded-full bg-[#1e6055]" />
+            <span>Band Brake (3)</span>
           </span>
         </div>
-        <p className="text-xs text-slate-400 max-w-3xl">
-          All 12 problems from course review sessions, Minor II, and End Semester Assessments (ESA). Click any problem to load it
-          instantly into the corresponding studio with 1-click preset application. Errata examples demonstrate how GripLab corrects known
-          errors from the handwritten class notes.
-        </p>
       </div>
 
-      {/* Problem groups */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div>
-          {renderGroup("Disc Clutch Problems (C1–C5)", "clutch", clutchProblems)}
-        </div>
-        <div>
-          {renderGroup("Block Brake Problems (B1–B4)", "block_brake", blockProblems)}
-        </div>
-        <div>
-          {renderGroup("Band Brake Problems (BB1–BB3)", "band_brake", bandProblems)}
-        </div>
-      </div>
+      {/* 3 Categories: Clutch, Block Brake, Band Brake */}
+      {renderGroup("Disc Clutch Review & Exam Questions", "clutch", clutchProblems)}
+      {renderGroup("Block (Shoe) Brake Equilibrium Problems", "block_brake", blockProblems)}
+      {renderGroup("Band Brake Design & Analysis Problems", "band_brake", bandProblems)}
     </div>
   );
 };

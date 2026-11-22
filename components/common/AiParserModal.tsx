@@ -35,7 +35,6 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
     const reader = new FileReader();
     reader.onload = (ev) => {
       const result = ev.target?.result as string;
-      // Strip the data URL prefix → keep only the base64 portion
       setImageBase64(result.split(",")[1]);
     };
     reader.readAsDataURL(file);
@@ -81,8 +80,8 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
 
   const confidenceColor =
     !parsed ? "" :
-    parsed.confidence >= 0.7 ? "text-emerald-400" :
-    parsed.confidence >= 0.4 ? "text-amber-400" : "text-rose-400";
+    parsed.confidence >= 0.7 ? "text-emerald-700" :
+    parsed.confidence >= 0.4 ? "text-amber-700" : "text-rose-700";
 
   const moduleLabels: Record<string, string> = {
     clutch: "Clutch Studio",
@@ -91,40 +90,39 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl rounded-2xl border border-slate-700 bg-[#0d1526] shadow-2xl shadow-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-white shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[#e4e8eb] px-6 py-4">
           <div className="flex items-center space-x-2">
-            <Sparkles className="h-5 w-5 text-violet-400" />
-            <h2 className="text-base font-bold text-white">AI Problem Parser</h2>
-            <span className="rounded bg-violet-950 px-2 py-0.5 text-[10px] font-mono font-semibold text-violet-300 border border-violet-800/60">
-              Gemini-powered
+            <Sparkles className="h-5 w-5 text-[#a435f0]" />
+            <h2 className="text-base font-bold text-[#2d2f31]">AI Problem Parser</h2>
+            <span className="rounded bg-[#f6efff] px-2 py-0.5 text-[10px] font-mono font-bold text-[#5624d0] border border-[#d8b4fe]">
+              Gemini Flash
             </span>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+          <button onClick={onClose} className="rounded-lg p-1.5 text-[#6a6f73] hover:bg-[#f7f9fa] hover:text-[#2d2f31] transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
-          {/* Notice */}
-          <p className="text-xs text-slate-400 leading-relaxed">
-            Paste a textbook problem statement or upload a photo. The AI will extract input parameters only —
-            <span className="text-cyan-400 font-semibold"> all calculations remain fully deterministic</span>.
-            Works offline (regex fallback) without an API key.
+          <p className="text-xs text-[#6a6f73] leading-relaxed">
+            Paste a textbook problem statement or upload a photo. The AI extracts input parameters only —
+            <span className="text-[#a435f0] font-semibold"> all calculations remain 100% deterministic</span>.
+            Includes offline regex fallback.
           </p>
 
           {/* Text input */}
           <div>
-            <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-1.5 block">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-1.5 block">
               Problem statement (paste text)
             </label>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="e.g. A multi-disc clutch transmits 8 kW at 1440 rpm. The inner and outer diameters are 80 mm and 140 mm respectively. μ = 0.1, p = 0.35 MPa. Find the number of plates."
-              className="w-full h-28 rounded-xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-xs text-slate-200 placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500/40 resize-none transition-colors"
+              className="w-full h-28 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-4 py-3 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0] resize-none transition-colors"
             />
           </div>
 
@@ -132,13 +130,13 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
           <div className="flex items-center gap-3">
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center space-x-2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-300 hover:border-violet-500 hover:bg-violet-950/40 hover:text-violet-300 transition-all"
+              className="flex items-center space-x-2 rounded-md border border-[#d1d7dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all"
             >
               <Upload className="h-3.5 w-3.5" />
               <span>Upload photo</span>
             </button>
             {imageName && (
-              <span className="text-xs text-emerald-400 font-mono flex items-center space-x-1">
+              <span className="text-xs text-emerald-700 font-mono flex items-center space-x-1">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 <span>{imageName}</span>
               </span>
@@ -148,19 +146,19 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
 
           {/* Error */}
           {error && (
-            <div className="flex items-start space-x-2 rounded-lg border border-rose-800/60 bg-rose-950/40 px-4 py-3">
-              <AlertCircle className="h-4 w-4 text-rose-400 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-rose-300">{error}</p>
+            <div className="flex items-start space-x-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3">
+              <AlertCircle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
+              <p className="text-xs text-rose-900">{error}</p>
             </div>
           )}
 
           {/* Results */}
           {parsed && (
-            <div className="rounded-xl border border-slate-700 bg-slate-900/60 p-4 space-y-3">
+            <div className="rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                  <span className="text-sm font-semibold text-white">
+                  <CheckCircle2 className="h-4 w-4 text-[#1e6055]" />
+                  <span className="text-sm font-bold text-[#2d2f31]">
                     Detected: {moduleLabels[parsed.module] ?? parsed.module}
                   </span>
                 </div>
@@ -170,39 +168,28 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
               </div>
 
               {parsed.offline && (
-                <p className="text-xs text-amber-400 italic">
+                <p className="text-xs text-amber-800 italic">
                   ⚠ Offline mode: regex fallback only. Set GEMINI_API_KEY in .env.local for full parsing.
                 </p>
               )}
 
-              {parsed.notes && parsed.notes.length > 0 && (
-                <ul className="space-y-1">
-                  {parsed.notes.map((n, i) => (
-                    <li key={i} className="text-[11px] text-slate-400 flex items-start space-x-1">
-                      <span className="text-amber-400 mt-0.5">•</span>
-                      <span>{n}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
               {/* Extracted inputs table */}
               {Object.keys(parsed.inputs).length > 0 && (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white rounded border border-[#e4e8eb] p-2">
                   <table className="w-full text-xs">
                     <thead>
-                      <tr className="border-b border-slate-800">
-                        <th className="text-left pb-1.5 text-slate-400 font-mono font-normal">Field</th>
-                        <th className="text-right pb-1.5 text-slate-400 font-mono font-normal">Value</th>
+                      <tr className="border-b border-[#e4e8eb]">
+                        <th className="text-left pb-1 text-[#6a6f73] font-mono font-semibold">Field</th>
+                        <th className="text-right pb-1 text-[#6a6f73] font-mono font-semibold">Value</th>
                       </tr>
                     </thead>
                     <tbody>
                       {Object.entries(parsed.inputs)
                         .filter(([, v]) => v !== null && v !== undefined)
                         .map(([k, v]) => (
-                          <tr key={k} className="border-b border-slate-800/50">
-                            <td className="py-1 text-slate-300 font-mono">{k}</td>
-                            <td className="py-1 text-right text-cyan-300 font-mono font-semibold">{v}</td>
+                          <tr key={k} className="border-b border-[#f7f9fa]">
+                            <td className="py-1 text-[#2d2f31] font-mono">{k}</td>
+                            <td className="py-1 text-right text-[#5624d0] font-mono font-bold">{v}</td>
                           </tr>
                         ))}
                     </tbody>
@@ -216,7 +203,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
           <div className="flex items-center justify-between pt-1">
             <button
               onClick={reset}
-              className="text-xs text-slate-400 hover:text-slate-200 transition-colors"
+              className="text-xs font-semibold text-[#6a6f73] hover:text-[#2d2f31] transition-colors"
             >
               Reset
             </button>
@@ -224,7 +211,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
               <button
                 onClick={handleParse}
                 disabled={loading}
-                className="flex items-center space-x-2 rounded-lg bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700 transition-colors shadow-md shadow-violet-600/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 rounded-md bg-[#a435f0] hover:bg-[#8710d8] px-4 py-2 text-xs font-bold text-white transition-colors shadow-sm disabled:opacity-60"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 <span>{loading ? "Parsing…" : "Parse Problem"}</span>
@@ -232,7 +219,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
               {parsed && (
                 <button
                   onClick={handleApply}
-                  className="flex items-center space-x-2 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-700 transition-colors shadow-md shadow-cyan-600/30"
+                  className="flex items-center space-x-1.5 rounded-md bg-[#2d2f31] hover:bg-black px-4 py-2 text-xs font-bold text-white transition-colors shadow-sm"
                 >
                   <span>Apply to Studio</span>
                   <ChevronRight className="h-4 w-4" />

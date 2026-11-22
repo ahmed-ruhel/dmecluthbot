@@ -17,34 +17,40 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAiModal,
 }) => {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#090d16]/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        {/* Brand / Title */}
-        <div className="flex items-center space-x-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-500 shadow-lg shadow-cyan-500/20">
-            <Disc className="h-6 w-6 text-white animate-spin-slow" />
+    <header className="sticky top-0 z-50 bg-white border-b border-[#d1d7dc] shadow-sm">
+      {/* Udemy-style Top Announcement Banner */}
+      <div className="bg-[#5624d0] text-white text-[12px] font-medium py-1.5 px-4 text-center">
+        <span className="font-semibold">23EMEC301 Design of Machine Elements</span> &bull; Sem V GenAI Component 2 &bull; KLE Technological University
+      </div>
+
+      {/* Main Navbar: Full Fluid Width (no huge left/right gutters) */}
+      <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5 gap-4">
+        {/* Brand / Logo */}
+        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onSelectTab("clutch")}>
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#a435f0] text-white shadow-sm">
+            <Disc className="h-5 w-5 animate-spin-slow" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold tracking-tight text-white">GripLab</span>
-              <span className="rounded-md bg-cyan-950/80 px-2 py-0.5 text-[11px] font-semibold text-cyan-400 border border-cyan-800/50">
-                23EMEC301
+              <span className="text-xl font-bold tracking-tight text-[#2d2f31]">GripLab</span>
+              <span className="rounded bg-[#f6efff] px-2 py-0.5 text-[11px] font-bold text-[#5624d0] border border-[#d8b4fe]">
+                DME Sem V
               </span>
             </div>
-            <p className="text-xs text-slate-400">
-              Clutch & Brake Force Calculator &bull; Sem V DME
+            <p className="text-[11px] text-[#6a6f73] hidden sm:block">
+              Clutch &amp; Brake Force Calculator &bull; Mahadevan &amp; Reddy (4th Ed)
             </p>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center space-x-1 rounded-xl bg-slate-900/90 p-1 border border-slate-800">
+        {/* Navigation Tabs (Udemy Button / Tab Aesthetic) */}
+        <nav className="flex items-center space-x-1 overflow-x-auto py-1">
           <button
             onClick={() => onSelectTab("clutch")}
-            className={`flex items-center space-x-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
               activeTab === "clutch"
-                ? "bg-cyan-600 text-white shadow-md shadow-cyan-600/30"
-                : "text-slate-300 hover:text-white hover:bg-slate-800"
+                ? "bg-[#a435f0] text-white shadow-sm"
+                : "text-[#2d2f31] hover:bg-[#f7f9fa] hover:text-[#a435f0]"
             }`}
           >
             <Layers className="h-3.5 w-3.5" />
@@ -53,10 +59,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onSelectTab("block_brake")}
-            className={`flex items-center space-x-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
               activeTab === "block_brake"
-                ? "bg-amber-600 text-white shadow-md shadow-amber-600/30"
-                : "text-slate-300 hover:text-white hover:bg-slate-800"
+                ? "bg-[#a435f0] text-white shadow-sm"
+                : "text-[#2d2f31] hover:bg-[#f7f9fa] hover:text-[#a435f0]"
             }`}
           >
             <RotateCcw className="h-3.5 w-3.5" />
@@ -65,10 +71,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onSelectTab("band_brake")}
-            className={`flex items-center space-x-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
               activeTab === "band_brake"
-                ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
-                : "text-slate-300 hover:text-white hover:bg-slate-800"
+                ? "bg-[#a435f0] text-white shadow-sm"
+                : "text-[#2d2f31] hover:bg-[#f7f9fa] hover:text-[#a435f0]"
             }`}
           >
             <Disc className="h-3.5 w-3.5" />
@@ -77,10 +83,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onSelectTab("gallery")}
-            className={`flex items-center space-x-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
               activeTab === "gallery"
-                ? "bg-purple-600 text-white shadow-md shadow-purple-600/30"
-                : "text-slate-300 hover:text-white hover:bg-slate-800"
+                ? "bg-[#a435f0] text-white shadow-sm"
+                : "text-[#2d2f31] hover:bg-[#f7f9fa] hover:text-[#a435f0]"
             }`}
           >
             <BookOpen className="h-3.5 w-3.5" />
@@ -89,10 +95,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => onSelectTab("report")}
-            className={`flex items-center space-x-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+            className={`flex items-center space-x-1.5 rounded-md px-3.5 py-1.5 text-xs font-semibold transition-all ${
               activeTab === "report"
-                ? "bg-rose-600 text-white shadow-md shadow-rose-600/30"
-                : "text-slate-300 hover:text-white hover:bg-slate-800"
+                ? "bg-[#a435f0] text-white shadow-sm"
+                : "text-[#2d2f31] hover:bg-[#f7f9fa] hover:text-[#a435f0]"
             }`}
           >
             <Printer className="h-3.5 w-3.5" />
@@ -100,19 +106,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Right Action: AI Parse & Status */}
-        <div className="flex items-center space-x-2.5">
+        {/* Right Actions: AI Parser & Math Shield */}
+        <div className="flex items-center space-x-2 shrink-0">
           <button
             onClick={onOpenAiModal}
-            className="flex items-center space-x-1.5 rounded-lg border border-purple-500/40 bg-purple-950/40 px-3 py-1.5 text-xs font-medium text-purple-300 hover:bg-purple-900/60 hover:text-white transition-all shadow-sm shadow-purple-500/10"
+            className="flex items-center space-x-1.5 rounded-md bg-[#a435f0] hover:bg-[#8710d8] px-3.5 py-1.5 text-xs font-bold text-white transition-all shadow-sm"
           >
-            <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+            <Sparkles className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">AI Problem Autofill</span>
           </button>
 
-          <div className="hidden lg:flex items-center space-x-1.5 rounded-lg bg-emerald-950/40 border border-emerald-800/40 px-2.5 py-1.5 text-[11px] text-emerald-400">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-            <span>Pure Deterministic Math</span>
+          <div className="hidden xl:flex items-center space-x-1.5 rounded-md bg-[#f7f9fa] border border-[#d1d7dc] px-2.5 py-1.5 text-[11px] font-semibold text-[#2d2f31]">
+            <ShieldCheck className="h-3.5 w-3.5 text-[#1e6055]" />
+            <span>Deterministic Math</span>
           </div>
         </div>
       </div>

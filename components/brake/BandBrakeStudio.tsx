@@ -90,8 +90,11 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
 
   // Allow parent (gallery) to trigger a preset by name
   useEffect(() => {
-    if (triggerPreset && ["BB1","BB2","BB3"].includes(triggerPreset)) {
-      loadPreset(triggerPreset as "BB1" | "BB2" | "BB3");
+    if (triggerPreset) {
+      const code = triggerPreset.split("_")[0];
+      if (["BB1","BB2","BB3"].includes(code)) {
+        loadPreset(code as "BB1" | "BB2" | "BB3");
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerPreset]);
@@ -99,32 +102,35 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-lg">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-700/50">
-              <Disc className="h-5 w-5" />
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe]">
+              <Disc className="h-4 w-4" />
             </span>
-            <h2 className="text-xl font-bold tracking-tight text-white">Band Brake Studio</h2>
-            <span className="rounded bg-emerald-950 px-2.5 py-0.5 text-xs font-mono font-medium text-emerald-300 border border-emerald-800/60">
+            <h2 className="text-xl font-bold tracking-tight text-[#2d2f31]">Band Brake Studio</h2>
+            <span className="rounded bg-[#f6efff] px-2.5 py-0.5 text-xs font-bold text-[#5624d0] border border-[#d8b4fe]">
               CO6 &bull; Eq 13.18–19
             </span>
           </div>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-[#6a6f73]">
             Simple and differential band brakes: tension ratio, band sizing, lever design, and self-locking detection.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-mono uppercase text-slate-400 mr-1">Exam Presets:</span>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mr-1">Exam Presets:</span>
           {(["BB1","BB2","BB3"] as const).map((p) => (
-            <button key={p} onClick={() => loadPreset(p)}
-              className="rounded-lg border border-slate-800 bg-slate-900/80 px-2.5 py-1 text-xs font-mono font-semibold text-slate-300 hover:border-emerald-500 hover:bg-emerald-950/40 hover:text-emerald-300 transition-all">
+            <button
+              key={p}
+              onClick={() => loadPreset(p)}
+              className="rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-mono font-bold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
+            >
               {p}
             </button>
           ))}
-          <div className="h-4 w-[1px] bg-slate-800 mx-1" />
+          <div className="h-4 w-[1px] bg-[#d1d7dc] mx-1" />
           <ScenarioControls
             module="band_brake"
             inputs={{ ...inputs, brakeType, simpleCase, rotation }}
@@ -135,165 +141,303 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
 
       {/* Type & Case Selector */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-          <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 block">Band Brake Type</label>
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 shadow-sm">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-2 block">Band Brake Type</label>
           <div className="grid grid-cols-2 gap-1.5">
-            {(["simple","differential"] as const).map((t) => (
-              <button key={t} onClick={() => setBrakeType(t)}
-                className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${brakeType === t ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/30" : "bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200"}`}>
-                {t === "simple" ? "Simple Band" : "Differential Band"}
-              </button>
-            ))}
+            <button
+              onClick={() => setBrakeType("simple")}
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
+                brakeType === "simple"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+              }`}
+            >
+              Simple Band
+            </button>
+            <button
+              onClick={() => setBrakeType("differential")}
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
+                brakeType === "differential"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+              }`}
+            >
+              Differential
+            </button>
           </div>
         </div>
 
         {brakeType === "simple" && (
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-            <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 block">Simple Band Case</label>
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 shadow-sm">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-2 block">Simple Band Geometry</label>
             <div className="grid grid-cols-2 gap-1.5">
-              {(["case_e","case_d"] as const).map((cs) => (
-                <button key={cs} onClick={() => setSimpleCase(cs)}
-                  className={`rounded-lg px-3 py-2 text-xs font-medium transition-all ${simpleCase === cs ? "bg-emerald-600 text-white" : "bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200"}`}>
-                  {cs === "case_e" ? "Case (e) — Eq 13.19(c,d)" : "Case (d) — Eq 13.19(a,b)"}
-                </button>
-              ))}
+              <button
+                onClick={() => setSimpleCase("case_e")}
+                className={`rounded-md px-2 py-1.5 text-xs font-bold transition-all ${
+                  simpleCase === "case_e"
+                    ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                    : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+                }`}
+              >
+                Case (e): Arm b
+              </button>
+              <button
+                onClick={() => setSimpleCase("case_d")}
+                className={`rounded-md px-2 py-1.5 text-xs font-bold transition-all ${
+                  simpleCase === "case_d"
+                    ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                    : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+                }`}
+              >
+                Case (d): Direct
+              </button>
             </div>
           </div>
         )}
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3">
-          <label className="text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2 block">Rotation Direction</label>
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 shadow-sm">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-2 block">Rotation Direction</label>
           <div className="grid grid-cols-2 gap-1.5">
-            {(["cw","ccw"] as const).map((dir) => (
-              <button key={dir} onClick={() => setRotation(dir)}
-                className={`rounded-lg px-3 py-2 text-xs font-bold transition-all ${rotation === dir ? "bg-emerald-600 text-white" : "bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200"}`}>
-                {dir === "cw" ? "↻ CW" : "↺ CCW"}
-              </button>
-            ))}
+            <button
+              onClick={() => setRotation("cw")}
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
+                rotation === "cw"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+              }`}
+            >
+              ↻ CW
+            </button>
+            <button
+              onClick={() => setRotation("ccw")}
+              className={`rounded-md px-3 py-1.5 text-xs font-bold transition-all ${
+                rotation === "ccw"
+                  ? "bg-[#a435f0] text-white shadow-sm border border-[#a435f0]"
+                  : "bg-white text-[#2d2f31] border border-[#d1d7dc] hover:bg-[#f7f9fa]"
+              }`}
+            >
+              ↺ CCW
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Inputs */}
+      {/* Main Grid: Inputs (5 cols) & Diagrams/Results (7 cols) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         <div className="lg:col-span-5 space-y-4">
-          <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-xl space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-semibold text-slate-200 flex items-center space-x-2">
-                <Sliders className="h-4 w-4 text-emerald-400" />
-                <span>Band Brake Inputs</span>
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3">
+              <h3 className="text-xs font-bold text-[#2d2f31] flex items-center space-x-2">
+                <Sliders className="h-4 w-4 text-[#a435f0]" />
+                <span>Band &amp; Lever Dimensions</span>
               </h3>
-              <button onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1 rounded-lg bg-emerald-950/60 border border-emerald-800/60 px-2 py-1 text-[11px] font-medium text-emerald-300 hover:bg-emerald-900/60">
+              <button
+                onClick={() => setIsMaterialModalOpen(true)}
+                className="flex items-center space-x-1 rounded-md bg-[#f6efff] border border-[#d8b4fe] px-2.5 py-1 text-[11px] font-bold text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
+              >
                 <Sparkles className="h-3 w-3" />
                 <span>Pick Material</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              {[
-                { key:"D", label:"Drum Dia D [mm]", ph:"e.g. 600" },
-                { key:"theta_deg", label:"Wrap Angle θ [°]", ph:"270" },
-                { key:"mu", label:"Friction Coeff μ", ph:"0.25" },
-                { key:"a", label:"Lever Effort Arm a [mm]", ph:"1500" },
-                ...(brakeType === "simple" ? [
-                  { key:"b", label:"Band Attach Arm b [mm]", ph:"200" },
-                ] : [
-                  { key:"b1", label:"Tight Arm b1 [mm]", ph:"38" },
-                  { key:"b2", label:"Slack Arm b2 [mm]", ph:"150" },
-                ]),
-                { key:"Ft", label:"Tangential Force Ft [N]", ph:"e.g. 9000" },
-                { key:"T_Nm", label:"Torque T [N·m]", ph:"or use P & N" },
-                { key:"P_kW", label:"Power P [kW]", ph:"e.g. 30" },
-                { key:"N_rpm", label:"Speed N [rpm]", ph:"e.g. 750" },
-                { key:"h", label:"Band Thickness h [mm]", ph:"auto: 0.005D" },
-                { key:"b_prime", label:"Band Width b' [mm]", ph:"or use ratio" },
-                { key:"band_width_ratio", label:"Width Ratio b'/h", ph:"e.g. 10" },
-                { key:"sigma_d_band", label:"Band Tensile Stress σ [MPa]", ph:"50" },
-                { key:"sigma_lever", label:"Lever Bending Stress [MPa]", ph:"80 for design" },
-                { key:"lever_k", label:"Lever Depth Ratio k (hl/bl)", ph:"2" },
-              ].map(({key, label, ph}) => (
-                <div key={key}>
-                  <label className="text-slate-400 font-medium">{label}</label>
+            <div className="space-y-3 text-xs">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Drum Dia D [mm]</label>
                   <input
                     type="text"
-                    placeholder={ph}
-                    value={(inputs as any)[key]}
-                    onChange={(e) => handleInput(key as keyof typeof inputs, e.target.value)}
-                    className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-1.5 text-slate-100 font-mono text-xs focus:border-emerald-500 focus:outline-none"
+                    value={inputs.D}
+                    onChange={(e) => handleInput("D", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
                   />
                 </div>
-              ))}
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Wrap Angle &theta; [&deg;]</label>
+                  <input
+                    type="text"
+                    value={inputs.theta_deg}
+                    onChange={(e) => handleInput("theta_deg", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Friction Coeff &mu;</label>
+                  <input
+                    type="text"
+                    value={inputs.mu}
+                    onChange={(e) => handleInput("mu", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Effort Arm a [mm]</label>
+                  <input
+                    type="text"
+                    value={inputs.a}
+                    onChange={(e) => handleInput("a", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+              </div>
+
+              {brakeType === "simple" ? (
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Attachment Arm b [mm]</label>
+                  <input
+                    type="text"
+                    value={inputs.b}
+                    onChange={(e) => handleInput("b", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[#6a6f73] font-bold text-[11px]">Arm b1 (short) [mm]</label>
+                    <input
+                      type="text"
+                      value={inputs.b1}
+                      onChange={(e) => handleInput("b1", e.target.value)}
+                      className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#6a6f73] font-bold text-[11px]">Arm b2 (long) [mm]</label>
+                    <input
+                      type="text"
+                      value={inputs.b2}
+                      onChange={(e) => handleInput("b2", e.target.value)}
+                      className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Tangential Force Ft [N]</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 9000 or from P/N"
+                    value={inputs.Ft}
+                    onChange={(e) => handleInput("Ft", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Power P [kW]</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 30"
+                    value={inputs.P_kW}
+                    onChange={(e) => handleInput("P_kW", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Band Tensile &sigma;_band [MPa]</label>
+                  <input
+                    type="text"
+                    value={inputs.sigma_d_band}
+                    onChange={(e) => handleInput("sigma_d_band", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#6a6f73] font-bold text-[11px]">Lever Bending &sigma;_lever [MPa]</label>
+                  <input
+                    type="text"
+                    value={inputs.sigma_lever}
+                    onChange={(e) => handleInput("sigma_lever", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-[#2d2f31] font-mono text-xs focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Quick Result Cards */}
+          {/* Quick Summary Results Badges */}
           {s && (
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Tight Side F1</span>
-                <p className="mt-1 text-lg font-bold text-rose-400 font-mono">{formatNum(s.F1, 1)} <span className="text-xs text-slate-400">N</span></p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Slack Side F2</span>
-                <p className="mt-1 text-lg font-bold text-cyan-400 font-mono">{formatNum(s.F2, 1)} <span className="text-xs text-slate-400">N</span></p>
-              </div>
-              <div className="rounded-xl border border-slate-800 bg-[#070c16] p-3 text-center">
-                <span className="text-[10px] font-mono uppercase text-slate-400">Braking Torque</span>
-                <p className="mt-1 text-sm font-bold text-emerald-400 font-mono">{formatNum(s.T_Nm, 2)} N·m</p>
-              </div>
-              <div className={`rounded-xl border p-3 text-center ${s.isSelfLocking ? "border-rose-800 bg-rose-950/20" : "border-slate-800 bg-[#070c16]"}`}>
-                <span className="text-[10px] font-mono uppercase text-slate-400">Applied Force F</span>
-                <p className={`mt-1 text-sm font-bold font-mono ${s.isSelfLocking ? "text-rose-400" : "text-white"}`}>
-                  {formatNum(s.F_operating, 2)} N
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Tight Side F1</span>
+                <p className="mt-1 text-lg font-bold text-[#b32d0f] font-mono">
+                  {formatNum(s.F1, 0)} <span className="text-xs font-normal text-[#6a6f73]">N</span>
                 </p>
-                {s.isSelfLocking && <span className="text-[10px] text-rose-400 font-bold">SELF-LOCKING</span>}
+                <span className="text-[10px] text-[#6a6f73] font-mono">
+                  Slack F2 = {formatNum(s.F2, 0)} N
+                </span>
               </div>
-              <div className="col-span-2 rounded-xl border border-slate-800 bg-[#070c16] p-2.5 text-xs font-mono space-y-0.5">
-                <div className="flex justify-between">
-                  <span className="text-slate-400">Band h × b':</span>
-                  <span className="text-white">{formatNum(s.h, 2)} × {formatNum(s.b_prime, 2)} mm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400">p1 (tight) / p2 (slack):</span>
-                  <span className="text-white">{formatNum(s.p1, 3)} / {formatNum(s.p2, 3)} MPa</span>
-                </div>
-                {s.lever_bl && (
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Lever section bl × hl:</span>
-                    <span className="text-white">{formatNum(s.lever_bl, 1)} × {s.lever_hl ? formatNum(s.lever_hl, 1) : "—"} mm</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-slate-400">F_cw / F_ccw:</span>
-                  <span className="text-white">{formatNum(s.F_cw, 1)} / {formatNum(s.F_ccw, 1)} N</span>
-                </div>
+
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Operating Force F</span>
+                <p className="mt-1 text-lg font-bold text-[#5624d0] font-mono">
+                  {formatNum(s.F_operating, 1)} <span className="text-xs font-normal text-[#6a6f73]">N</span>
+                </p>
+                <span className="text-[10px] text-[#6a6f73] font-mono">
+                  CW: {formatNum(s.F_cw, 0)} N | CCW: {formatNum(s.F_ccw, 0)} N
+                </span>
+              </div>
+
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Band Cross-Section</span>
+                <p className="mt-1 text-sm font-bold text-[#2d2f31] font-mono">
+                  {formatNum(s.b_prime, 1)} &times; {formatNum(s.h, 1)}{" "}
+                  <span className="text-xs font-normal text-[#6a6f73]">mm</span>
+                </p>
+                <span className="text-[10px] text-[#6a6f73] font-mono">
+                  p_avg = {formatNum(s.p_avg, 3)} MPa
+                </span>
+              </div>
+
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-3.5 text-center shadow-sm">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#6a6f73]">Lever Section (k=2)</span>
+                <p className="mt-1 text-sm font-bold text-[#1e6055] font-mono">
+                  {s.lever_bl && s.lever_hl ? `${formatNum(s.lever_bl, 1)} × ${formatNum(s.lever_hl, 1)} mm` : "N/A"}
+                </p>
+                <span className={`text-[10px] font-bold ${s.isSelfLocking ? "text-rose-600" : "text-[#1e6055]"}`}>
+                  {s.isSelfLocking ? "Self-Locking Active!" : "Non-Locking"}
+                </span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Right: Diagram + Steps */}
-        <div className="lg:col-span-7 space-y-6">
-          <BandBrakeDiagramSvg
-            D={parsedInputs.D}
-            theta_deg={parsedInputs.theta_deg}
-            mu={parsedInputs.mu}
-            F1={s?.F1 ?? 0}
-            F2={s?.F2 ?? 0}
-            brakeType={brakeType}
-            isSelfLocking={s?.isSelfLocking ?? false}
-            h={s?.h}
-            b_prime={s?.b_prime}
-          />
+        <div className="lg:col-span-7 space-y-5">
+          {s && (
+            <BandBrakeDiagramSvg
+              D={s.D}
+              theta_deg={parsedInputs.theta_deg}
+              mu={s.exp_mu_theta > 0 ? parsedInputs.mu : 0.25}
+              F1={s.F1}
+              F2={s.F2}
+              brakeType={s.brakeType}
+              isSelfLocking={s.isSelfLocking}
+              h={s.h}
+              b_prime={s.b_prime}
+            />
+          )}
 
           {result.success && (
-            <div className="rounded-2xl border border-slate-800 bg-[#070c16] p-5 shadow-xl">
-              <div className="flex items-center space-x-2 border-b border-slate-800 pb-3 mb-4">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                <h3 className="text-sm font-semibold text-slate-200">Step-by-Step Mathematical Derivation</h3>
+            <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3 mb-4">
+                <div>
+                  <h3 className="text-sm font-bold text-[#2d2f31] flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#1e6055]" />
+                    <span>Deterministic Mathematical Derivations</span>
+                  </h3>
+                  <p className="text-[11px] text-[#6a6f73]">
+                    Belt formula F1/F2 = e^(μθ), band sizing, and lever bending calculations per Chapter 13.
+                  </p>
+                </div>
               </div>
+
               <StepDisplay steps={result.steps} warnings={result.warnings} />
             </div>
           )}
@@ -304,7 +448,9 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
         isOpen={isMaterialModalOpen}
         onClose={() => setIsMaterialModalOpen(false)}
         filterCategory="brake"
-        onSelect={(muVal) => handleInput("mu", muVal.toString())}
+        onSelect={(muVal) => {
+          handleInput("mu", muVal.toString());
+        }}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Share2, Bookmark, Check, Copy } from "lucide-react";
+import { Share2, Bookmark, Check } from "lucide-react";
 import { saveScenario, encodeScenarioUrl } from "@/lib/scenario";
 
 interface ScenarioControlsProps {
@@ -50,12 +50,12 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
       <button
         onClick={handleSave}
         title="Save this configuration to local storage"
-        className="flex items-center space-x-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-slate-300 hover:border-cyan-500 hover:bg-cyan-950/40 hover:text-cyan-300 transition-all"
+        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
       >
         {saved ? (
           <>
-            <Check className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="text-emerald-400 text-[11px]">Saved!</span>
+            <Check className="h-3.5 w-3.5 text-[#1e6055]" />
+            <span className="text-[#1e6055] text-[11px] font-bold">Saved!</span>
           </>
         ) : (
           <>
@@ -68,12 +68,12 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
       <button
         onClick={handleShare}
         title="Copy shareable link to clipboard"
-        className="flex items-center space-x-1 rounded-lg border border-slate-700 bg-slate-800/80 px-2.5 py-1 text-xs font-medium text-slate-300 hover:border-violet-500 hover:bg-violet-950/40 hover:text-violet-300 transition-all"
+        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
       >
         {copied ? (
           <>
-            <Check className="h-3.5 w-3.5 text-emerald-400" />
-            <span className="text-emerald-400 text-[11px]">Copied!</span>
+            <Check className="h-3.5 w-3.5 text-[#5624d0]" />
+            <span className="text-[#5624d0] text-[11px] font-bold">Copied!</span>
           </>
         ) : (
           <>

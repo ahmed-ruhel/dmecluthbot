@@ -5,12 +5,13 @@
 @import "katex/dist/katex.min.css";
 
 :root {
-  --background: #090d16;
-  --foreground: #f1f5f9;
-  --accent-cyan: #06b6d4;
-  --accent-amber: #f59e0b;
-  --accent-emerald: #10b981;
-  --accent-rose: #f43f5e;
+  --background: #f7f9fa;
+  --foreground: #2d2f31;
+  --udemy-purple: #a435f0;
+  --udemy-purple-dark: #5624d0;
+  --udemy-purple-light: #f6efff;
+  --udemy-border: #d1d7dc;
+  --udemy-muted: #6a6f73;
 }
 
 body {
@@ -22,37 +23,39 @@ body {
 
 /* Custom engineering scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1120;
+  background: #f7f9fa;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 3px;
+  background: #d1d7dc;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #a435f0;
 }
 
-/* Code & KaTeX refinements */
+/* KaTeX light styling */
 .katex-display {
   margin: 0.5em 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.25em 0;
+  padding: 0.35em 0;
+  color: #2d2f31;
 }
 
 .katex {
   font-size: 1.05em;
+  color: #2d2f31;
 }
 
 /* Print Styles for 2-page documentation report */
 @media print {
   body {
     background-color: #ffffff !important;
-    color: #0f172a !important;
+    color: #2d2f31 !important;
   }
   .no-print {
     display: none !important;
@@ -62,7 +65,7 @@ body {
   }
   .card-print {
     box-shadow: none !important;
-    border: 1px solid #cbd5e1 !important;
+    border: 1px solid #d1d7dc !important;
     background: #ffffff !important;
   }
 }

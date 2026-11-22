@@ -24,7 +24,6 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   Fa,
   theory,
 }) => {
-  // SVG viewport dimensions
   const width = 460;
   const height = 280;
 
@@ -32,9 +31,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   const cx = 130;
   const cy = 140;
   const maxR = 90;
-  const minR = 25;
 
-  // Normalized radii for visual presentation
   const ratio = Do > 0 ? Math.max(0.2, Math.min(0.85, Di / Do)) : 0.5;
   const rOuter = maxR;
   const rInner = maxR * ratio;
@@ -48,197 +45,219 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   const plateSpacing = stackHeight / (totalPlates + 1);
 
   return (
-    <div className="relative rounded-2xl border border-slate-800 bg-[#060a12] p-4 shadow-xl overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2">
-        <span className="text-xs font-semibold text-slate-200 flex items-center space-x-1.5">
-          <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span>Interactive Friction Disc & Plate Stack Geometry</span>
+    <div className="relative rounded-xl border border-[#d1d7dc] bg-white p-4 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2 mb-2">
+        <span className="text-xs font-bold text-[#2d2f31] flex items-center space-x-1.5">
+          <span className="h-2 w-2 rounded-full bg-[#a435f0] animate-pulse"></span>
+          <span>Interactive Friction Disc &amp; Plate Stack Geometry</span>
         </span>
-        <span className="rounded bg-cyan-950/80 px-2 py-0.5 text-[10px] font-mono text-cyan-400 border border-cyan-800/50">
-          {theory === "uniform_wear" ? "Uniform Wear (Conservative)" : "Uniform Pressure"}
+        <span className="rounded bg-[#f6efff] px-2 py-0.5 text-[10px] font-mono font-bold text-[#5624d0] border border-[#d8b4fe]">
+          {theory === "uniform_wear" ? "Uniform Wear (Standard)" : "Uniform Pressure"}
         </span>
       </div>
 
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-auto select-none"
-        style={{ maxHeight: "280px" }}
-      >
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto select-none font-sans">
+        {/* Subtle grid pattern background */}
         <defs>
-          <linearGradient id="discGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0891b2" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#0284c7" stopOpacity="0.1" />
-          </linearGradient>
-
-          <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#d97706" />
-            <stop offset="100%" stopColor="#b45309" />
-          </linearGradient>
-
-          <linearGradient id="steelGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#64748b" />
-            <stop offset="100%" stopColor="#475569" />
-          </linearGradient>
-
-          <marker
-            id="arrowhead"
-            markerWidth="6"
-            markerHeight="6"
-            refX="4"
-            refY="3"
-            orient="auto"
-          >
-            <polygon points="0 0, 6 3, 0 6" fill="#06b6d4" />
-          </marker>
-
-          <marker
-            id="forceArrow"
-            markerWidth="6"
-            markerHeight="6"
-            refX="4"
-            refY="3"
-            orient="auto"
-          >
-            <polygon points="0 0, 6 3, 0 6" fill="#f43f5e" />
-          </marker>
+          <pattern id="clutch-grid-light" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f2f5" strokeWidth="1" />
+          </pattern>
         </defs>
+        <rect width={width} height={height} fill="url(#clutch-grid-light)" rx="8" />
 
-        {/* --- LEFT: Concentric Annular Disc View --- */}
-        {/* Outer diameter ring */}
+        {/* ================= LEFT: CONCENTRIC DISC ================= */}
+        {/* Outer Friction Disc */}
         <circle
           cx={cx}
           cy={cy}
           r={rOuter}
-          fill="url(#discGrad)"
-          stroke="#0891b2"
-          strokeWidth="2"
+          fill="#f6efff"
+          stroke="#a435f0"
+          strokeWidth="2.5"
+          className="transition-all duration-300"
         />
 
-        {/* Inner diameter hole */}
+        {/* Inner Hole */}
         <circle
           cx={cx}
           cy={cy}
           r={rInner}
-          fill="#060a12"
-          stroke="#38bdf8"
-          strokeWidth="1.5"
-          strokeDasharray="3 3"
+          fill="#ffffff"
+          stroke="#6a6f73"
+          strokeWidth="2"
+          className="transition-all duration-300"
         />
 
-        {/* Mean diameter circle */}
+        {/* Mean Radius Guideline (Dashed) */}
         <circle
           cx={cx}
           cy={cy}
           r={rMean}
           fill="none"
-          stroke="#f59e0b"
-          strokeWidth="1"
-          strokeDasharray="2 2"
+          stroke="#b4690e"
+          strokeWidth="1.5"
+          strokeDasharray="4 3"
         />
 
-        {/* Center Shaft Hub */}
-        <circle cx={cx} cy={cy} r={minR * 0.4} fill="#1e293b" stroke="#475569" strokeWidth="1" />
-        <line x1={cx - 10} y1={cy} x2={cx + 10} y2={cy} stroke="#64748b" strokeWidth="1" />
-        <line x1={cx} y1={cy - 10} x2={cx} y2={cy + 10} stroke="#64748b" strokeWidth="1" />
+        {/* Center crosshair */}
+        <line x1={cx - 8} y1={cy} x2={cx + 8} y2={cy} stroke="#919496" strokeWidth="1" />
+        <line x1={cx} y1={cy - 8} x2={cx} y2={cy + 8} stroke="#919496" strokeWidth="1" />
 
-        {/* Dimension Callouts for Left Disc */}
-        <text x={cx} y={cy - rOuter - 8} fill="#38bdf8" fontSize="10" textAnchor="middle" fontFamily="monospace">
+        {/* Outer Dimension Label Do */}
+        <text
+          x={cx}
+          y={cy - rOuter - 6}
+          textAnchor="middle"
+          fill="#a435f0"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="bold"
+        >
           Do = {formatNum(Do, 1)} mm
         </text>
 
-        <text x={cx} y={cy + rInner + 14} fill="#38bdf8" fontSize="9" textAnchor="middle" fontFamily="monospace">
+        {/* Inner Dimension Label Di */}
+        <text
+          x={cx}
+          y={cy + rInner + 14}
+          textAnchor="middle"
+          fill="#6a6f73"
+          fontSize="10"
+          fontFamily="monospace"
+          fontWeight="bold"
+        >
           Di = {formatNum(Di, 1)} mm
         </text>
 
-        <text x={cx + rMean + 5} y={cy - 12} fill="#f59e0b" fontSize="9" fontFamily="monospace">
+        {/* Mean Diameter Label Dm */}
+        <text
+          x={cx + rMean + 5}
+          y={cy}
+          fill="#b4690e"
+          fontSize="9"
+          fontFamily="monospace"
+          alignmentBaseline="middle"
+          fontWeight="bold"
+        >
           Dm = {formatNum(Dm, 1)}
         </text>
 
-        {/* --- RIGHT: Multi-Plate Stack Cross-Section --- */}
-        <text x={stackX + 50} y={22} fill="#94a3b8" fontSize="10" textAnchor="middle" fontWeight="bold">
+        {/* ================= RIGHT: MULTI-PLATE STACK ================= */}
+        {/* Central Shaft */}
+        <rect
+          x={stackX + 50}
+          y={stackTopY - 10}
+          width={16}
+          height={stackHeight + 20}
+          fill="#e4e8eb"
+          stroke="#d1d7dc"
+          strokeWidth="1.5"
+          rx="2"
+        />
+        <text
+          x={stackX + 58}
+          y={stackTopY - 16}
+          textAnchor="middle"
+          fill="#6a6f73"
+          fontSize="9"
+          fontWeight="bold"
+        >
           Plate Stack ({n1} driving + {n2} driven)
         </text>
 
-        {/* Central Drive Shaft */}
-        <rect
-          x={stackX + 35}
-          y={stackTopY - 10}
-          width="30"
-          height={stackHeight + 20}
-          fill="#1e293b"
-          stroke="#334155"
-          rx="3"
-        />
-
-        {/* Compressing Force Arrows Fa */}
-        <line
-          x1={stackX - 25}
-          y1={stackTopY + stackHeight / 2}
-          x2={stackX - 5}
-          y2={stackTopY + stackHeight / 2}
-          stroke="#f43f5e"
-          strokeWidth="2.5"
-          markerEnd="url(#forceArrow)"
-        />
-        <text x={stackX - 15} y={stackTopY + stackHeight / 2 - 8} fill="#f43f5e" fontSize="9" fontWeight="bold" textAnchor="middle">
-          Fa
-        </text>
-
-        <line
-          x1={stackX + 125}
-          y1={stackTopY + stackHeight / 2}
-          x2={stackX + 105}
-          y2={stackTopY + stackHeight / 2}
-          stroke="#f43f5e"
-          strokeWidth="2.5"
-          markerEnd="url(#forceArrow)"
-        />
-        <text x={stackX + 115} y={stackTopY + stackHeight / 2 - 8} fill="#f43f5e" fontSize="9" fontWeight="bold" textAnchor="middle">
-          Fa
-        </text>
-
-        {/* Draw alternating plates */}
+        {/* Disc Pack Plates */}
         {Array.from({ length: totalPlates }).map((_, idx) => {
           const isDriving = idx % 2 === 0;
-          const py = stackTopY + (idx + 1) * plateSpacing;
-          const plateWidth = isDriving ? 85 : 70;
-          const px = isDriving ? stackX + 7.5 : stackX + 15;
+          const yPos = stackTopY + (idx + 1) * plateSpacing;
+          const plateWidth = isDriving ? 80 : 70;
+          const plateOffset = isDriving ? 0 : 5;
 
           return (
             <g key={idx}>
               <rect
-                x={px}
-                y={py}
+                x={stackX + 58 - plateWidth / 2 + plateOffset}
+                y={yPos - 3}
                 width={plateWidth}
-                height="6"
-                fill={isDriving ? "url(#bronzeGrad)" : "url(#steelGrad)"}
-                rx="1"
-                stroke={isDriving ? "#b45309" : "#475569"}
-                strokeWidth="0.5"
+                height={6}
+                fill={isDriving ? "#a435f0" : "#2d2f31"}
+                rx="2"
               />
-              {/* Splines representation */}
-              {isDriving ? (
-                <rect x={px + 2} y={py - 1} width="4" height="8" fill="#d97706" />
-              ) : (
-                <rect x={px + plateWidth - 6} y={py - 1} width="4" height="8" fill="#94a3b8" />
+              {/* Friction interface contact lines */}
+              {idx < totalPlates - 1 && (
+                <line
+                  x1={stackX + 22}
+                  y1={yPos + plateSpacing / 2}
+                  x2={stackX + 94}
+                  y2={yPos + plateSpacing / 2}
+                  stroke="#e4e8eb"
+                  strokeWidth="1"
+                  strokeDasharray="2 2"
+                />
               )}
             </g>
           );
         })}
 
-        {/* Stack annotations */}
-        <text x={stackX + 50} y={stackTopY + stackHeight + 25} fill="#38bdf8" fontSize="10" textAnchor="middle" fontFamily="monospace">
-          n&apos; = {nPrime} active friction pairs
-        </text>
+        {/* Axial Force Arrows Fa */}
+        {Fa > 0 && (
+          <g>
+            {/* Left arrow pushing in */}
+            <line
+              x1={stackX - 8}
+              y1={cy}
+              x2={stackX + 10}
+              y2={cy}
+              stroke="#b32d0f"
+              strokeWidth="2.5"
+            />
+            <polygon
+              points={`${stackX + 16},${cy} ${stackX + 8},${cy - 4} ${stackX + 8},${cy + 4}`}
+              fill="#b32d0f"
+            />
+            <text x={stackX - 14} y={cy + 3} fill="#b32d0f" fontSize="9" fontWeight="bold" textAnchor="end">
+              Fa
+            </text>
+
+            {/* Right arrow pushing in */}
+            <line
+              x1={stackX + 124}
+              y1={cy}
+              x2={stackX + 106}
+              y2={cy}
+              stroke="#b32d0f"
+              strokeWidth="2.5"
+            />
+            <polygon
+              points={`${stackX + 100},${cy} ${stackX + 108},${cy - 4} ${stackX + 108},${cy + 4}`}
+              fill="#b32d0f"
+            />
+            <text x={stackX + 130} y={cy + 3} fill="#b32d0f" fontSize="9" fontWeight="bold" textAnchor="start">
+              Fa
+            </text>
+          </g>
+        )}
 
         {/* Legend */}
-        <g transform={`translate(${width - 130}, ${height - 35})`}>
-          <rect x="0" y="0" width="10" height="6" fill="#d97706" rx="1" />
-          <text x="14" y="6" fill="#cbd5e1" fontSize="9">Driving (n1)</text>
+        <g transform={`translate(${stackX - 5}, ${height - 22})`}>
+          <rect x="0" y="0" width="10" height="6" fill="#a435f0" rx="1" />
+          <text x="14" y="6" fill="#6a6f73" fontSize="9">Driving (n1)</text>
 
-          <rect x="65" y="0" width="10" height="6" fill="#64748b" rx="1" />
-          <text x="79" y="6" fill="#cbd5e1" fontSize="9">Driven (n2)</text>
+          <rect x="75" y="0" width="10" height="6" fill="#2d2f31" rx="1" />
+          <text x="89" y="6" fill="#6a6f73" fontSize="9">Driven (n2)</text>
         </g>
+
+        {/* Active friction surfaces text */}
+        <text
+          x={stackX + 58}
+          y={height - 8}
+          textAnchor="middle"
+          fill="#5624d0"
+          fontSize="9"
+          fontFamily="monospace"
+          fontWeight="bold"
+        >
+          n&apos; = {nPrime} active friction pairs
+        </text>
       </svg>
     </div>
   );
