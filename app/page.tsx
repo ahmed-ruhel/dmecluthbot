@@ -58,16 +58,16 @@ export default function HomePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f7f9fa] text-[#2d2f31] flex flex-col font-sans">
-      {/* Global Navigation Bar */}
+    <div className="min-h-screen bg-[#f7f9fa] text-[#1c1d1f] flex flex-col font-sans">
+      {/* Global Navigation Bar (Top banner removed) */}
       <Navbar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onOpenAiModal={() => setIsAiModalOpen(true)}
       />
 
-      {/* Main Content Area: Fluid Edge-to-Edge (unwanted extreme left/right margins removed) */}
-      <main className="flex-1 w-full px-3 sm:px-6 lg:px-8 py-5">
+      {/* Main Content Area: Fluid Edge-to-Edge */}
+      <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === "clutch" && (
           <ClutchStudio
             triggerPreset={clutchPreset}
@@ -94,18 +94,6 @@ export default function HomePage() {
           <PrintReport />
         )}
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-[#d1d7dc] bg-white py-4 text-center text-xs text-[#6a6f73]">
-        <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="font-medium text-[#2d2f31]">
-            GripLab &bull; 23EMEC301 Design of Machine Elements &bull; School of Mechanical Engineering, KLE Technological University
-          </p>
-          <p className="text-[11px] text-[#6a6f73]">
-            Verified against Design Data Handbook (4th Ed) by K. Mahadevan &amp; K. Balaveera Reddy.
-          </p>
-        </div>
-      </footer>
 
       {/* AI Parser Modal */}
       <AiParserModal
