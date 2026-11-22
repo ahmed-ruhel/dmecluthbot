@@ -50,7 +50,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
       <button
         onClick={handleSave}
         title="Save this configuration to local storage"
-        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
+        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
       >
         {saved ? (
           <>
@@ -68,7 +68,7 @@ export const ScenarioControls: React.FC<ScenarioControlsProps> = ({
       <button
         onClick={handleShare}
         title="Copy shareable link to clipboard"
-        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-white px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
+        className="flex items-center space-x-1 rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-2.5 py-1 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all shadow-sm"
       >
         {copied ? (
           <>

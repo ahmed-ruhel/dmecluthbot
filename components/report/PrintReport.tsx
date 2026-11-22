@@ -24,7 +24,7 @@ export const PrintReport: React.FC<PrintReportProps> = ({
   return (
     <div className="space-y-4">
       {/* Print controls (hidden in print) */}
-      <div className="no-print flex items-center justify-between rounded-2xl border-2 border-[#d1d7dc] bg-white p-5 shadow-sm">
+      <div className="no-print flex items-center justify-between rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
         <div>
           <h2 className="text-xl sm:text-2xl font-black text-[#1c1d1f] flex items-center space-x-2">
             <Printer className="h-6 w-6 text-[#a435f0]" />
@@ -44,7 +44,7 @@ export const PrintReport: React.FC<PrintReportProps> = ({
       </div>
 
       {/* Printable report content */}
-      <div ref={reportRef} className="card-print rounded-2xl border-2 border-[#d1d7dc] bg-white p-8 space-y-6 font-sans text-sm shadow-sm text-[#1c1d1f]">
+      <div ref={reportRef} className="card-print rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-8 space-y-6 font-sans text-sm shadow-sm text-[#1c1d1f]">
         {/* Page 1 Header */}
         <div className="border-b-2 border-[#1c1d1f] pb-4">
           <div className="flex items-start justify-between">

@@ -219,7 +219,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
   return (
     <div className="space-y-6">
       {/* Module Title & Preset Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
         <div>
           <div className="flex items-center space-x-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
@@ -248,7 +248,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
             >
               {p}
             </button>
@@ -265,7 +265,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
       {/* Control Bar: Mode & Theory Switchers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Mode Selector */}
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Calculation Mode
           </label>
@@ -282,7 +282,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-extrabold transition-all text-center ${
                   mode === m.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-white text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
                 }`}
               >
                 {m.label}
@@ -292,7 +292,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         </div>
 
         {/* Theory Selector */}
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f]">
               Theory Model
@@ -313,7 +313,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
                 theory === "uniform_wear"
                   ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-white text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
               }`}
             >
               Uniform Wear (Standard &bull; Eq 13.9d)
@@ -323,7 +323,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
                 theory === "uniform_pressure"
                   ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-white text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
               }`}
             >
               Uniform Pressure (New &bull; Eq 13.9a)
@@ -336,7 +336,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Input Form (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5">
+          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm space-y-5">
             <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5">
               <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
                 <Sliders className="h-5 w-5 text-[#a435f0]" />
@@ -362,7 +362,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 8 or 60"
                     value={inputs.powerKw}
                     onChange={(e) => handleInputChange("powerKw", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -372,7 +372,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 1440 or 1000"
                     value={inputs.speedRpm}
                     onChange={(e) => handleInputChange("speedRpm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -385,7 +385,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 240"
                     value={inputs.torqueNm}
                     onChange={(e) => handleInputChange("torqueNm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -395,7 +395,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="1.0 or 2.5"
                     value={inputs.fos}
                     onChange={(e) => handleInputChange("fos", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -409,7 +409,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="0.25"
                     value={inputs.mu}
                     onChange={(e) => handleInputChange("mu", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -419,7 +419,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="0.35"
                     value={inputs.pAllowableMpa}
                     onChange={(e) => handleInputChange("pAllowableMpa", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -433,7 +433,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 250 or solved"
                     value={inputs.diaOuterMm}
                     onChange={(e) => handleInputChange("diaOuterMm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -443,7 +443,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 150 or solved"
                     value={inputs.diaInnerMm}
                     onChange={(e) => handleInputChange("diaInnerMm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -457,7 +457,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="0.5 or 0.577"
                     value={inputs.diameterRatio}
                     onChange={(e) => handleInputChange("diameterRatio", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -467,7 +467,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 0.2 (b=0.2Ro)"
                     value={inputs.radialWidthFraction}
                     onChange={(e) => handleInputChange("radialWidthFraction", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -495,7 +495,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 5"
                     value={inputs.numDrivingDiscs}
                     onChange={(e) => handleInputChange("numDrivingDiscs", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -505,7 +505,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="e.g. 4"
                     value={inputs.numDrivenDiscs}
                     onChange={(e) => handleInputChange("numDrivenDiscs", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -515,7 +515,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     placeholder="Auto or n1+n2-1"
                     value={inputs.numFrictionSurfaces}
                     onChange={(e) => handleInputChange("numFrictionSurfaces", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-2 py-2 text-[#111827] font-mono text-sm font-bold text-center focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -525,7 +525,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
           {/* Quick Summary Results Badges (Punchy & Bold) */}
           {result.success && result.summary && (
             <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#a435f0]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#a435f0]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Torque Capacity</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#a435f0] font-mono">
                   {formatNum(result.summary.torqueNm, 2)} <span className="text-sm font-extrabold text-[#4b5563]">N·m</span>
@@ -535,7 +535,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Axial Clamping Fa</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#1e6055] font-mono">
                   {formatNum(result.summary.actualAxialForceN || result.summary.axialForceN, 1)}{" "}
@@ -546,7 +546,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Dimensions (Do &times; Di)</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
                   {formatNum(result.summary.diaOuterMm, 1)} &times; {formatNum(result.summary.diaInnerMm, 1)}{" "}
@@ -557,7 +557,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#b4690e]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Working Pressure</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#b4690e] font-mono">
                   {formatNum(result.summary.maxPressureMpa, 4)}{" "}
@@ -691,7 +691,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
           {/* Step-by-Step KaTeX Derivation Panel */}
           {result.success && (
-            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
               <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5 mb-4">
                 <div>
                   <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">

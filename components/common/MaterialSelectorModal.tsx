@@ -34,7 +34,7 @@ export const MaterialSelectorModal: React.FC<MaterialSelectorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-2xl">
+      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-2xl">
         <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3">
           <div>
             <h3 className="text-base font-bold text-[#2d2f31] flex items-center space-x-2">
@@ -61,7 +61,7 @@ export const MaterialSelectorModal: React.FC<MaterialSelectorModalProps> = ({
             placeholder="Search material pair (e.g. Bronze, Cast Iron, Asbestos, Leather)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] pl-9 pr-4 py-2 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
+            className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] pl-9 pr-4 py-2 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-[#f7f9fa] focus:outline-none focus:ring-1 focus:ring-[#a435f0]"
           />
         </div>
 

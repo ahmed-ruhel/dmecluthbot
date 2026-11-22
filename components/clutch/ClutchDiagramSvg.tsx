@@ -45,7 +45,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   const plateSpacing = stackHeight / (totalPlates + 1);
 
   return (
-    <div className="relative rounded-xl border border-[#d1d7dc] bg-white p-4 shadow-sm overflow-hidden">
+    <div className="relative rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-4 shadow-sm overflow-hidden">
       <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2 mb-2">
         <span className="text-xs font-bold text-[#2d2f31] flex items-center space-x-1.5">
           <span className="h-2 w-2 rounded-full bg-[#a435f0] animate-pulse"></span>

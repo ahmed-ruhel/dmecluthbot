@@ -17,7 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAiModal,
 }) => {
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#d1d7dc] shadow-sm">
+    <header className="sticky top-0 z-50 bg-[#f7f9fa] border-b border-[#d1d7dc] shadow-sm">
       {/* Main Navbar: Full Fluid Width without unwanted top banner */}
       <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 gap-4">
         {/* Brand / Logo */}

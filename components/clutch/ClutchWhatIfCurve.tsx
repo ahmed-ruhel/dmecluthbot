@@ -67,7 +67,7 @@ export const ClutchWhatIfCurve: React.FC<ClutchWhatIfCurveProps> = ({
   const curX = scaleX(Math.min(0.9, Math.max(0.2, currentRatio)));
 
   return (
-    <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 shadow-sm space-y-2">
+    <div className="rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-4 shadow-sm space-y-2">
       <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2">
         <div>
           <h4 className="text-xs font-bold text-[#2d2f31]">

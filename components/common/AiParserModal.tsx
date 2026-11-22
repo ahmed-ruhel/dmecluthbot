@@ -91,7 +91,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-white shadow-2xl">
+      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#e4e8eb] px-6 py-4">
           <div className="flex items-center space-x-2">
@@ -122,7 +122,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="e.g. A multi-disc clutch transmits 8 kW at 1440 rpm. The inner and outer diameters are 80 mm and 140 mm respectively. μ = 0.1, p = 0.35 MPa. Find the number of plates."
-              className="w-full h-28 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-4 py-3 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0] resize-none transition-colors"
+              className="w-full h-28 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-4 py-3 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-[#f7f9fa] focus:outline-none focus:ring-1 focus:ring-[#a435f0] resize-none transition-colors"
             />
           </div>
 
@@ -130,7 +130,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
           <div className="flex items-center gap-3">
             <button
               onClick={() => fileRef.current?.click()}
-              className="flex items-center space-x-2 rounded-md border border-[#d1d7dc] bg-white px-3 py-1.5 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all"
+              className="flex items-center space-x-2 rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all"
             >
               <Upload className="h-3.5 w-3.5" />
               <span>Upload photo</span>
@@ -175,7 +175,7 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
 
               {/* Extracted inputs table */}
               {Object.keys(parsed.inputs).length > 0 && (
-                <div className="overflow-x-auto bg-white rounded border border-[#e4e8eb] p-2">
+                <div className="overflow-x-auto bg-[#f7f9fa] rounded border border-[#e4e8eb] p-2">
                   <table className="w-full text-xs">
                     <thead>
                       <tr className="border-b border-[#e4e8eb]">

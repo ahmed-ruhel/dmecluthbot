@@ -95,7 +95,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
   return (
     <div className="space-y-6">
       {/* Header & Preset Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
         <div>
           <div className="flex items-center space-x-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
@@ -122,7 +122,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
             >
               {p}
             </button>
@@ -138,7 +138,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
 
       {/* Case & Rotation Selector */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Geometry Case (Pivot &amp; Ft Line)
           </label>
@@ -154,7 +154,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-extrabold transition-all text-center ${
                   brakeCase === c.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-white text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
                 }`}
               >
                 {c.label}
@@ -163,7 +163,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           </div>
         </div>
 
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Drum Rotation Direction
           </label>
@@ -178,7 +178,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
                   rotation === r.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-white text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
                 }`}
               >
                 {r.label}
@@ -191,7 +191,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
       {/* Main Grid: Inputs (5 cols) & Diagrams/Results (7 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5">
+          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm space-y-5">
             <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5">
               <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
                 <Sliders className="h-5 w-5 text-[#a435f0]" />
@@ -214,7 +214,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.D}
                     onChange={(e) => handleInput("D", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -223,7 +223,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.a}
                     onChange={(e) => handleInput("a", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -235,7 +235,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.b}
                     onChange={(e) => handleInput("b", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -244,7 +244,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.c}
                     onChange={(e) => handleInput("c", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -256,7 +256,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.contact2Theta}
                     onChange={(e) => handleInput("contact2Theta", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -265,7 +265,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.mu}
                     onChange={(e) => handleInput("mu", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -278,7 +278,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     placeholder="or F applied"
                     value={inputs.torqueNm}
                     onChange={(e) => handleInput("torqueNm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -288,7 +288,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     placeholder="or T"
                     value={inputs.appliedForceN}
                     onChange={(e) => handleInput("appliedForceN", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -300,7 +300,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.speedRpm}
                     onChange={(e) => handleInput("speedRpm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
                 <div>
@@ -309,7 +309,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                     type="text"
                     value={inputs.timeSec}
                     onChange={(e) => handleInput("timeSec", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-white px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
                   />
                 </div>
               </div>
@@ -319,7 +319,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           {/* Quick Summary Results Badges (Punchy & Bold) */}
           {s && (
             <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#5624d0]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#5624d0]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Operating Force F</span>
                 <p className={`mt-1 text-2xl sm:text-3xl font-black font-mono ${s.isSelfLocking ? "text-rose-600" : "text-[#5624d0]"}`}>
                   {formatNum(s.operatingForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
@@ -329,7 +329,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Tangential Force Ft</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#1e6055] font-mono">
                   {formatNum(s.tangentialForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
@@ -339,7 +339,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#b4690e]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Heat Rate H</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#b4690e] font-mono">
                   {formatNum(s.heatRateKw, 2)} <span className="text-sm font-extrabold text-[#4b5563]">kW</span>
@@ -349,7 +349,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
+              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
                 <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Critical Offset c_crit</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
                   {formatNum(s.criticalOffsetMm, 1)} <span className="text-sm font-extrabold text-[#4b5563]">mm</span>
@@ -381,7 +381,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           )}
 
           {result.success && (
-            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
               <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5 mb-4">
                 <div>
                   <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">

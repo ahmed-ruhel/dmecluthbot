@@ -56,7 +56,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
           return (
             <div
               key={p.id}
-              className="group flex flex-col justify-between rounded-xl border-2 border-[#d1d7dc] bg-white p-4 cursor-pointer hover:shadow-lg transition-all hover:border-[#a435f0] hover:scale-[1.01]"
+              className="group flex flex-col justify-between rounded-xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 cursor-pointer hover:shadow-lg transition-all hover:border-[#a435f0] hover:scale-[1.01]"
               onClick={() => onSelectProblem(p.module, p.id)}
             >
               <div>
@@ -126,7 +126,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
   return (
     <div className="space-y-8">
       {/* Gallery Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 rounded-2xl border-2 border-[#d1d7dc] bg-white p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
         <div>
           <div className="flex items-center space-x-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">

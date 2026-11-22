@@ -62,7 +62,7 @@ Result: ${step.resultLatex}`;
         {steps.map((step, idx) => (
           <div
             key={idx}
-            className="rounded-lg border border-[#d1d7dc] bg-white p-4 shadow-sm transition-all hover:border-[#a435f0]/50"
+            className="rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] p-4 shadow-sm transition-all hover:border-[#a435f0]/50"
           >
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e4e8eb]">
               <div className="flex items-center space-x-2">

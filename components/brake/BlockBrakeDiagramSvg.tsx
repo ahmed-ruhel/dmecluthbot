@@ -59,7 +59,7 @@ export const BlockBrakeDiagramSvg: React.FC<BlockBrakeDiagramProps> = ({
   const pivotY = cy + (brakeCase === "case1" ? 0 : c > 0 ? -20 : 0);
 
   return (
-    <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 shadow-sm overflow-hidden">
+    <div className="rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-4 shadow-sm overflow-hidden">
       <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2 mb-2">
         <span className="text-xs font-bold text-[#2d2f31] flex items-center space-x-1.5">
           <span className={`h-2 w-2 rounded-full ${isHot ? "bg-amber-500 animate-pulse" : "bg-[#a435f0]"}`} />
