@@ -166,20 +166,8 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({
           </div>
         </div>
 
-        {/* Action Controls: AI Parser, Presets, Scenario */}
+        {/* Action Controls: Presets & Scenario */}
         <div className="flex flex-wrap items-center gap-2">
-          {onOpenAiModal && (
-            <button
-              onClick={onOpenAiModal}
-              className="flex items-center space-x-1.5 rounded-lg bg-[#5624d0] hover:bg-[#a435f0] text-white px-3.5 py-1.5 text-xs font-black shadow-sm hover:shadow transition-all duration-200 active:scale-95"
-            >
-              <Sparkles className="h-4 w-4" />
-              <span>Paste Problem Statement</span>
-            </button>
-          )}
-
-          <div className="h-6 w-[1px] bg-[#d1d7dc] mx-1" />
-
           <span className="text-xs font-black uppercase tracking-wider text-[#6a6f73] mr-1">
             Presets:
           </span>

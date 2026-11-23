@@ -364,20 +364,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({
           </div>
         </div>
 
-        {/* Action Controls: Presets, AI Parser, Scenario */}
+        {/* Action Controls: Presets & Scenario */}
         <div className="flex flex-wrap items-center gap-2">
-          {onOpenAiModal && (
-            <button
-              onClick={onOpenAiModal}
-              className="flex items-center space-x-1.5 rounded-lg bg-[#5624d0] hover:bg-[#a435f0] text-white px-3.5 py-1.5 text-xs font-black shadow-sm hover:shadow transition-all duration-200 active:scale-95"
-            >
-              <Sparkles className="h-4 w-4" />
-              <span>Paste Problem Statement</span>
-            </button>
-          )}
-
-          <div className="h-6 w-[1px] bg-[#d1d7dc] mx-1" />
-
           <span className="text-xs font-black uppercase tracking-wider text-[#6a6f73] mr-1">
             Presets:
           </span>
@@ -532,10 +520,10 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({
                   <button
                     key={t.id}
                     onClick={() => handleClutchTypeChange(t.id as ClutchPlateType)}
-                    className={`rounded-lg px-2 py-2 text-xs font-bold text-center transition-all ${
+                    className={`rounded-lg px-2.5 py-2 text-xs font-bold text-center transition-all ${
                       clutchType === t.id
-                        ? "bg-[#1c1d1f] text-white shadow-sm"
-                        : "bg-[#f7f9fa] text-[#4b5563] border border-[#d1d7dc] hover:bg-white hover:text-[#1c1d1f]"
+                        ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/20 scale-[1.02]"
+                        : "bg-[#f7f9fa] text-[#4b5563] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0] hover:text-[#a435f0]"
                     }`}
                   >
                     {t.label}

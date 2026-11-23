@@ -118,8 +118,8 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
             onClick={() => setFilter(tab.id as FilterCategory)}
             className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
               filter === tab.id
-                ? "bg-[#1c1d1f] text-white shadow-sm"
-                : "bg-[#f7f9fa] text-[#4b5563] border border-[#d1d7dc] hover:bg-white hover:text-[#1c1d1f]"
+                ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/20"
+                : "bg-white text-[#4b5563] border border-[#d1d7dc] hover:border-[#a435f0] hover:text-[#a435f0]"
             }`}
           >
             {tab.label}
