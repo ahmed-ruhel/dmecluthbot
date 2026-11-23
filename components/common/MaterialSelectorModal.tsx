@@ -62,7 +62,7 @@ export const MaterialSelectorModal: React.FC<MaterialSelectorModalProps> = ({
           <div>
             <h3 className="text-base font-bold text-[#1c1d1f] flex items-center space-x-2">
               <Sparkles className="h-5 w-5 text-[#a435f0]" />
-              <span>Handbook Friction Materials Library</span>
+              <span>Friction Materials Library</span>
             </h3>
             <p className="text-xs text-[#6a6f73]">
               Standard Friction Pairs &bull; Mahadevan &amp; Reddy (4th Ed)

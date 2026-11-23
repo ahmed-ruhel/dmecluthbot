@@ -325,10 +325,6 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             <Info className="h-4 w-4 text-[#a435f0] shrink-0 mt-0.5" />
             <div>
               <p className="font-black text-[#5624d0]">{modeDescriptions[mode].title}</p>
-              <p className="text-[11px] text-[#4b5563] mt-0.5">{modeDescriptions[mode].desc}</p>
-              <div className="mt-1 flex flex-wrap gap-2 text-[10px] font-mono">
-                <span className="text-[#6a6f73]">Solves: <strong className="text-[#1c1d1f] font-sans">{modeDescriptions[mode].solves}</strong></span>
-              </div>
             </div>
           </div>
         </div>
