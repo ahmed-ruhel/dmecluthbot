@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { GALLERY_PROBLEMS } from "@/data/gallery-problems";
-import { BookOpen, Layers, RotateCcw, Disc, ArrowRight } from "lucide-react";
+import { Layers, RotateCcw, Disc, ArrowRight, BookOpen } from "lucide-react";
 
 interface CourseGalleryProps {
   onSelectProblem: (moduleId: "clutch" | "block_brake" | "band_brake", presetCode: string) => void;
@@ -26,7 +26,11 @@ const moduleTheme = {
   },
 };
 
+type FilterCategory = "all" | "clutch" | "block_brake" | "band_brake";
+
 export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem }) => {
+  const [filter, setFilter] = useState<FilterCategory>("all");
+
   const clutchProblems = GALLERY_PROBLEMS.filter((p) => p.module === "clutch");
   const blockProblems = GALLERY_PROBLEMS.filter((p) => p.module === "block_brake");
   const bandProblems = GALLERY_PROBLEMS.filter((p) => p.module === "band_brake");
@@ -52,7 +56,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
           </span>
         </div>
 
-        {/* Udemy Course Cards Grid with Hover Animations */}
+        {/* Course Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {problems.map((p) => {
             return (
@@ -62,7 +66,7 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
                 onClick={() => onSelectProblem(p.module, p.id)}
               >
                 <div>
-                  {/* Course Thumbnail Banner with subtle zoom effect on hover */}
+                  {/* Card Thumbnail */}
                   <div className={`relative h-28 rounded-md bg-gradient-to-tr ${theme.gradient} p-3 text-white flex flex-col justify-between shadow-sm mb-3 overflow-hidden transition-all duration-300`}>
                     <div className="flex items-center justify-between z-10">
                       <span className="rounded bg-black/50 backdrop-blur-sm px-2.5 py-0.5 text-xs font-mono font-black tracking-wider uppercase text-white shadow-sm">
@@ -75,11 +79,10 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
                       <span className="text-[11px] font-medium text-white/80 block mt-0.5">{theme.name} Masterclass</span>
                     </div>
 
-                    {/* Disc watermark that rotates slightly on hover */}
                     <Disc className="absolute -bottom-6 -right-6 h-28 w-28 text-white/10 transition-transform duration-700 ease-out group-hover:rotate-45 pointer-events-none" />
                   </div>
 
-                  {/* Course Title */}
+                  {/* Title */}
                   <h3 className="text-sm font-black text-[#1c1d1f] group-hover:text-[#5624d0] line-clamp-2 leading-snug mb-3 transition-colors">
                     {p.title}
                   </h3>
@@ -101,29 +104,53 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
   };
 
   return (
-    <div className="space-y-10 animate-fade-in-scale">
+    <div className="space-y-8 animate-fade-in-scale">
+      {/* Category Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-[#d1d7dc] pb-3">
+        {[
+          { id: "all", label: `All Problems (${GALLERY_PROBLEMS.length})` },
+          { id: "clutch", label: `Clutch (${clutchProblems.length})` },
+          { id: "block_brake", label: `Block Brake (${blockProblems.length})` },
+          { id: "band_brake", label: `Band Brake (${bandProblems.length})` },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setFilter(tab.id as FilterCategory)}
+            className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+              filter === tab.id
+                ? "bg-[#1c1d1f] text-white shadow-sm"
+                : "bg-[#f7f9fa] text-[#4b5563] border border-[#d1d7dc] hover:bg-white hover:text-[#1c1d1f]"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-      {/* Course Categories */}
-      {renderGroup(
-        "Trending clutch design problems",
-        "Single-plate, multi-plate, and axial clamping force calculations under Uniform Wear and Uniform Pressure.",
-        "clutch",
-        clutchProblems
-      )}
+      {/* Course Categories based on filter */}
+      {(filter === "all" || filter === "clutch") &&
+        renderGroup(
+          "Clutch design problems",
+          "Single-plate, multi-plate, and axial clamping force calculations under Uniform Wear and Uniform Pressure.",
+          "clutch",
+          clutchProblems
+        )}
 
-      {renderGroup(
-        "Short block (shoe) brake equilibrium problems",
-        "Fulcrum moments, clockwise & counter-clockwise rotations, and self-locking boundary validation.",
-        "block_brake",
-        blockProblems
-      )}
+      {(filter === "all" || filter === "block_brake") &&
+        renderGroup(
+          "Short block (shoe) brake equilibrium problems",
+          "Fulcrum moments, clockwise & counter-clockwise rotations, and self-locking boundary validation.",
+          "block_brake",
+          blockProblems
+        )}
 
-      {renderGroup(
-        "Band brake tension & sizing masterclass",
-        "Simple and differential band brakes with capstan tension ratio F1/F2 = e^(μθ) and lever stresses.",
-        "band_brake",
-        bandProblems
-      )}
+      {(filter === "all" || filter === "band_brake") &&
+        renderGroup(
+          "Band brake tension & sizing problems",
+          "Simple and differential band brakes with capstan tension ratio F1/F2 = e^(μθ) and lever stresses.",
+          "band_brake",
+          bandProblems
+        )}
     </div>
   );
 };

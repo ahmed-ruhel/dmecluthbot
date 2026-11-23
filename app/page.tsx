@@ -71,18 +71,24 @@ export default function HomePage() {
         {activeTab === "clutch" && (
           <ClutchStudio
             triggerPreset={clutchPreset}
+            initialInputs={aiInputs}
+            onOpenAiModal={() => setIsAiModalOpen(true)}
           />
         )}
 
         {activeTab === "block_brake" && (
           <BlockBrakeStudio
             triggerPreset={blockPreset}
+            initialInputs={aiInputs}
+            onOpenAiModal={() => setIsAiModalOpen(true)}
           />
         )}
 
         {activeTab === "band_brake" && (
           <BandBrakeStudio
             triggerPreset={bandPreset}
+            initialInputs={aiInputs}
+            onOpenAiModal={() => setIsAiModalOpen(true)}
           />
         )}
 

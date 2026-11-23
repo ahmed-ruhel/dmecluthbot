@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { X, Sparkles, Upload, Loader2, AlertCircle, CheckCircle2, ChevronRight } from "lucide-react";
 
 interface ParsedInputs {
@@ -25,6 +25,23 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
   const [parsed, setParsed] = useState<ParsedInputs | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Lock body scroll and handle Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -90,50 +107,87 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] shadow-2xl">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-2xl my-auto rounded-xl border border-[#d1d7dc] bg-[#ffffff] shadow-2xl p-6 animate-fade-in-scale"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#e4e8eb] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3 mb-4">
           <div className="flex items-center space-x-2">
-            <Sparkles className="h-5 w-5 text-[#a435f0]" />
-            <h2 className="text-base font-bold text-[#2d2f31]">AI Problem Parser</h2>
-            <span className="rounded bg-[#f6efff] px-2 py-0.5 text-[10px] font-mono font-bold text-[#5624d0] border border-[#d8b4fe]">
-              Gemini Flash
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f6efff] text-[#5624d0]">
+              <Sparkles className="h-4 w-4" />
             </span>
+            <div>
+              <h2 className="text-base font-bold text-[#1c1d1f]">AI Problem Parser</h2>
+              <p className="text-xs text-[#6a6f73]">Paste any textbook question or exam problem</p>
+            </div>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-[#6a6f73] hover:bg-[#f7f9fa] hover:text-[#2d2f31] transition-colors">
-            <X className="h-4 w-4" />
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-[#6a6f73] hover:bg-[#f7f9fa] hover:text-[#1c1d1f] transition-colors"
+          >
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="space-y-4">
           <p className="text-xs text-[#6a6f73] leading-relaxed">
-            Paste a textbook problem statement or upload a photo. The AI extracts input parameters only —
-            <span className="text-[#a435f0] font-semibold"> all calculations remain 100% deterministic</span>.
-            Includes offline regex fallback.
+            Paste your problem statement. The parser automatically extracts all numerical parameters and maps them to the appropriate studio inputs —
+            <strong className="text-[#a435f0]"> all math is solved 100% deterministically</strong>.
           </p>
+
+          {/* Quick Example Loaders */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[11px] font-bold text-[#6a6f73] mr-1">Try Samples:</span>
+            <button
+              type="button"
+              onClick={() => setText("A multi-disc clutch transmits 8 kW at 1440 rpm. The inner and outer diameters are 80 mm and 140 mm respectively. μ = 0.1, allowable pressure is 0.35 MPa. Find the required number of plates.")}
+              className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#f7f9fa] border border-[#d1d7dc] text-[#5624d0] hover:bg-[#f6efff] transition-colors"
+            >
+              Clutch (8 kW, 1440 rpm)
+            </button>
+            <button
+              type="button"
+              onClick={() => setText("A single block brake has a drum diameter of 200 mm with contact angle 90 degrees. The lever arms are a = 250 mm, b = 200 mm, offset c = 50 mm. An operating force of 700 N is applied in CCW rotation with μ = 0.35. Find braking torque.")}
+              className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#f7f9fa] border border-[#d1d7dc] text-[#5624d0] hover:bg-[#f6efff] transition-colors"
+            >
+              Block Brake (700 N effort)
+            </button>
+            <button
+              type="button"
+              onClick={() => setText("A differential band brake has drum diameter 600 mm, wrap angle 300 degrees, lever arm a = 225 mm, b1 = 38 mm, b2 = 150 mm. Band thickness 3 mm, width 100 mm, allowable stress 56 MPa, μ = 0.22. Determine torque and operating force.")}
+              className="text-[11px] font-medium px-2 py-0.5 rounded bg-[#f7f9fa] border border-[#d1d7dc] text-[#5624d0] hover:bg-[#f6efff] transition-colors"
+            >
+              Differential Band (BB3)
+            </button>
+          </div>
 
           {/* Text input */}
           <div>
             <label className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-1.5 block">
-              Problem statement (paste text)
+              Problem statement text
             </label>
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="e.g. A multi-disc clutch transmits 8 kW at 1440 rpm. The inner and outer diameters are 80 mm and 140 mm respectively. μ = 0.1, p = 0.35 MPa. Find the number of plates."
-              className="w-full h-28 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-4 py-3 text-xs text-[#2d2f31] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-[#f7f9fa] focus:outline-none focus:ring-1 focus:ring-[#a435f0] resize-none transition-colors"
+              placeholder="Paste your problem here (e.g. A multi-disc clutch transmits 60 kW at 2000 rpm...)"
+              className="w-full h-28 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-4 py-3 text-xs text-[#1c1d1f] placeholder-[#6a6f73] focus:border-[#a435f0] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#a435f0] resize-none transition-colors"
             />
           </div>
 
           {/* Image upload */}
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => fileRef.current?.click()}
-              className="flex items-center space-x-2 rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-xs font-semibold text-[#2d2f31] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f7f9fa] transition-all"
+              className="flex items-center space-x-2 rounded-md border border-[#d1d7dc] bg-[#f7f9fa] px-3 py-1.5 text-xs font-semibold text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-white transition-all shadow-sm"
             >
               <Upload className="h-3.5 w-3.5" />
-              <span>Upload photo</span>
+              <span>Upload photo / scan</span>
             </button>
             {imageName && (
               <span className="text-xs text-emerald-700 font-mono flex items-center space-x-1">
@@ -141,88 +195,91 @@ export const AiParserModal: React.FC<AiParserModalProps> = ({ isOpen, onClose, o
                 <span>{imageName}</span>
               </span>
             )}
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFile}
+            />
           </div>
 
-          {/* Error */}
+          {/* Error display */}
           {error && (
-            <div className="flex items-start space-x-2 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3">
-              <AlertCircle className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
-              <p className="text-xs text-rose-900">{error}</p>
+            <div className="flex items-start space-x-2 rounded-lg border border-rose-200 bg-rose-50 p-3 text-xs text-rose-800">
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 mt-0.5" />
+              <span>{error}</span>
             </div>
           )}
 
-          {/* Results */}
+          {/* Parsed result card */}
           {parsed && (
             <div className="rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="h-4 w-4 text-[#1e6055]" />
-                  <span className="text-sm font-bold text-[#2d2f31]">
-                    Detected: {moduleLabels[parsed.module] ?? parsed.module}
-                  </span>
-                </div>
+                <span className="text-xs font-bold text-[#1c1d1f]">
+                  Detected Module:{" "}
+                  <span className="text-[#a435f0] font-black">{moduleLabels[parsed.module]}</span>
+                </span>
                 <span className={`text-xs font-mono font-bold ${confidenceColor}`}>
-                  Confidence: {Math.round((parsed.confidence ?? 0) * 100)}%
+                  Confidence: {Math.round(parsed.confidence * 100)}%
                 </span>
               </div>
 
-              {parsed.offline && (
-                <p className="text-xs text-amber-800 italic">
-                  ⚠ Offline mode: regex fallback only. Set GEMINI_API_KEY in .env.local for full parsing.
+              {/* Extracted parameters */}
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#6a6f73] mb-1.5">
+                  Extracted Parameters
                 </p>
-              )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {Object.entries(parsed.inputs)
+                    .filter(([, v]) => v !== null && v !== undefined)
+                    .map(([k, v]) => (
+                      <div key={k} className="rounded bg-white border border-[#d1d7dc] px-2.5 py-1 text-xs">
+                        <span className="text-[#6a6f73] font-mono text-[10px]">{k}: </span>
+                        <span className="font-bold text-[#1c1d1f] font-mono">{String(v)}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
 
-              {/* Extracted inputs table */}
-              {Object.keys(parsed.inputs).length > 0 && (
-                <div className="overflow-x-auto bg-[#f7f9fa] rounded border border-[#e4e8eb] p-2">
-                  <table className="w-full text-xs">
-                    <thead>
-                      <tr className="border-b border-[#e4e8eb]">
-                        <th className="text-left pb-1 text-[#6a6f73] font-mono font-semibold">Field</th>
-                        <th className="text-right pb-1 text-[#6a6f73] font-mono font-semibold">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(parsed.inputs)
-                        .filter(([, v]) => v !== null && v !== undefined)
-                        .map(([k, v]) => (
-                          <tr key={k} className="border-b border-[#f7f9fa]">
-                            <td className="py-1 text-[#2d2f31] font-mono">{k}</td>
-                            <td className="py-1 text-right text-[#5624d0] font-mono font-bold">{v}</td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </table>
+              {parsed.notes && parsed.notes.length > 0 && (
+                <div className="border-t border-[#e4e8eb] pt-2 text-[11px] text-[#6a6f73]">
+                  {parsed.notes.map((n, i) => (
+                    <p key={i}>• {n}</p>
+                  ))}
                 </div>
               )}
             </div>
           )}
 
-          {/* Action buttons */}
-          <div className="flex items-center justify-between pt-1">
+          {/* Actions */}
+          <div className="flex items-center justify-between pt-2 border-t border-[#e4e8eb]">
             <button
+              type="button"
               onClick={reset}
-              className="text-xs font-semibold text-[#6a6f73] hover:text-[#2d2f31] transition-colors"
+              className="text-xs text-[#6a6f73] hover:text-[#1c1d1f] underline"
             >
               Reset
             </button>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <button
+                type="button"
                 onClick={handleParse}
                 disabled={loading}
-                className="flex items-center space-x-2 rounded-md bg-[#a435f0] hover:bg-[#8710d8] px-4 py-2 text-xs font-bold text-white transition-colors shadow-sm disabled:opacity-60"
+                className="flex items-center space-x-1.5 rounded-lg bg-[#f7f9fa] border border-[#d1d7dc] px-4 py-2 text-xs font-bold text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-white disabled:opacity-50 transition-all shadow-sm"
               >
-                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                <span>{loading ? "Parsing…" : "Parse Problem"}</span>
+                {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                <span>{loading ? "Parsing..." : "Extract Parameters"}</span>
               </button>
+
               {parsed && (
                 <button
+                  type="button"
                   onClick={handleApply}
-                  className="flex items-center space-x-1.5 rounded-md bg-[#2d2f31] hover:bg-black px-4 py-2 text-xs font-bold text-white transition-colors shadow-sm"
+                  className="flex items-center space-x-1.5 rounded-lg bg-[#a435f0] px-4 py-2 text-xs font-bold text-white hover:bg-[#8710d8] transition-all shadow-md shadow-[#a435f0]/20"
                 >
-                  <span>Apply to Studio</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span>Apply &amp; Solve</span>
+                  <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               )}
             </div>

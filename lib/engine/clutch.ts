@@ -337,10 +337,15 @@ export function solveClutch(inputs: ClutchInputs): CalculationResult<ClutchSumma
     } else {
       // Uniform wear
       Dm = (Do + Di) / 2;
-      Fa = 0.5 * Math.PI * p_allow * Di * (Do - Di);
+      if (inputs.axialForceLimitN && inputs.axialForceLimitN > 0) {
+        Fa = inputs.axialForceLimitN;
+        p_max_actual = (2 * Fa) / (Math.PI * Di * (Do - Di));
+      } else {
+        Fa = 0.5 * Math.PI * p_allow * Di * (Do - Di);
+        p_max_actual = p_allow;
+      }
       Fa_actual = Fa;
       T_nominal = 0.5 * mu * Fa * Dm * n_prime;
-      p_max_actual = p_allow;
       p_mean_actual = Fa / ((Math.PI / 4) * (Do * Do - Di * Di));
 
       steps.push({

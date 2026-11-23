@@ -23,6 +23,7 @@ export interface CalculationResult<T = Record<string, number | string | boolean>
   summary: T;
   steps: StepDetail[];
   warnings: EngineWarning[];
+  error?: string;
 }
 
 export type ClutchTheory = "uniform_wear" | "uniform_pressure";

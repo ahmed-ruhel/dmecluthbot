@@ -17,18 +17,34 @@ import {
   Scale,
   Compass,
   Info,
+  RotateCcw,
+  FileText,
+  Disc,
 } from "lucide-react";
 
 interface ClutchStudioProps {
   triggerPreset?: string;
+  initialInputs?: Record<string, unknown> | null;
+  onOpenAiModal?: () => void;
 }
 
-export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => {
+type ClutchPlateType = "multi" | "single_both" | "single_one";
+type DimensionUnitMode = "diameters" | "radii";
+
+export const ClutchStudio: React.FC<ClutchStudioProps> = ({
+  triggerPreset,
+  initialInputs,
+  onOpenAiModal,
+}) => {
   // Solve mode and theory
   const [mode, setMode] = useState<ClutchSolveMode>("sizing");
   const [theory, setTheory] = useState<ClutchTheory>("uniform_wear");
   const [compareBoth, setCompareBoth] = useState<boolean>(false);
   const [isMaterialModalOpen, setIsMaterialModalOpen] = useState(false);
+
+  // User input assistance modes
+  const [clutchType, setClutchType] = useState<ClutchPlateType>("multi");
+  const [dimensionMode, setDimensionMode] = useState<DimensionUnitMode>("diameters");
 
   // Form input strings
   const [inputs, setInputs] = useState({
@@ -50,6 +66,71 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
   const handleInputChange = (field: keyof typeof inputs, val: string) => {
     setInputs((prev) => ({ ...prev, [field]: val }));
+  };
+
+  // Populate from AI parser if applied
+  useEffect(() => {
+    if (initialInputs) {
+      setInputs((prev) => {
+        const next = { ...prev };
+        Object.entries(initialInputs).forEach(([k, v]) => {
+          if (v !== null && v !== undefined && k in next) {
+            (next as any)[k] = String(v);
+          }
+        });
+        return next;
+      });
+    }
+  }, [initialInputs]);
+
+  // Handle Clutch Construction Type Switch
+  const handleClutchTypeChange = (type: ClutchPlateType) => {
+    setClutchType(type);
+    if (type === "single_both") {
+      setInputs((p) => ({
+        ...p,
+        numDrivingDiscs: "1",
+        numDrivenDiscs: "2",
+        numFrictionSurfaces: "2",
+      }));
+    } else if (type === "single_one") {
+      setInputs((p) => ({
+        ...p,
+        numDrivingDiscs: "1",
+        numDrivenDiscs: "1",
+        numFrictionSurfaces: "1",
+      }));
+    } else {
+      // multi-plate default
+      if (inputs.numFrictionSurfaces === "1" || inputs.numFrictionSurfaces === "2") {
+        setInputs((p) => ({
+          ...p,
+          numDrivingDiscs: "5",
+          numDrivenDiscs: "4",
+          numFrictionSurfaces: "8",
+        }));
+      }
+    }
+  };
+
+  // Clear all inputs for solving custom user problem
+  const handleClearAll = () => {
+    setInputs({
+      powerKw: "",
+      speedRpm: "",
+      torqueNm: "",
+      fos: "1.0",
+      mu: "0.25",
+      pAllowableMpa: "",
+      diaOuterMm: "",
+      diaInnerMm: "",
+      diameterRatio: "",
+      radialWidthFraction: "",
+      axialForceLimitN: "",
+      numDrivingDiscs: "",
+      numDrivenDiscs: "",
+      numFrictionSurfaces: "",
+    });
   };
 
   // Convert raw string inputs to parsed numbers
@@ -105,6 +186,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     if (preset === "C1") {
       setMode("sizing");
       setTheory("uniform_wear");
+      setClutchType("multi");
+      setDimensionMode("diameters");
       setCompareBoth(false);
       setInputs({
         powerKw: "",
@@ -125,6 +208,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     } else if (preset === "C2") {
       setMode("plate_count");
       setTheory("uniform_wear");
+      setClutchType("multi");
+      setDimensionMode("diameters");
       setCompareBoth(false);
       setInputs({
         powerKw: "8",
@@ -133,8 +218,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         fos: "1.0",
         mu: "0.25",
         pAllowableMpa: "0.35",
-        diaOuterMm: "140",
-        diaInnerMm: "80",
+        diaOuterMm: "250",
+        diaInnerMm: "150",
         diameterRatio: "",
         radialWidthFraction: "",
         axialForceLimitN: "600",
@@ -145,6 +230,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     } else if (preset === "C3") {
       setMode("sizing");
       setTheory("uniform_wear");
+      setClutchType("multi");
+      setDimensionMode("diameters");
       setCompareBoth(false);
       setInputs({
         powerKw: "60",
@@ -165,6 +252,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     } else if (preset === "C4") {
       setMode("capacity");
       setTheory("uniform_wear");
+      setClutchType("single_both");
+      setDimensionMode("diameters");
       setCompareBoth(true);
       setInputs({
         powerKw: "",
@@ -185,6 +274,8 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
     } else if (preset === "C5") {
       setMode("capacity");
       setTheory("uniform_wear");
+      setClutchType("multi");
+      setDimensionMode("diameters");
       setCompareBoth(false);
       setInputs({
         powerKw: "",
@@ -218,32 +309,39 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
   const s = result.success && result.summary ? result.summary : null;
 
-  // Calculation mode descriptions
-  const modeDescriptions: Record<ClutchSolveMode, { title: string; desc: string; inputsHighlight: string; solves: string }> = {
-    sizing: {
-      title: "Design Dimensions (Do, Di)",
-      desc: "Finds the required outer diameter (Do) and inner diameter (Di) of the clutch plate needed to transmit the target torque without exceeding allowable friction pressure.",
-      inputsHighlight: "Power/Torque, Diameter ratio (Di/Do), and Allowable pressure",
-      solves: "Outer diameter (Do), Inner diameter (Di), and Clamping force (Fa)",
-    },
-    plate_count: {
-      title: "Find Required Plates (n1, n2)",
-      desc: "For fixed clutch dimensions (Do, Di), computes how many friction pairs (n') and discs (n1 driving + n2 driven) are required to safely handle the torque.",
-      inputsHighlight: "Fixed Outer/Inner diameters and Target torque",
-      solves: "Active friction pairs (n') rounded to standard discs, and actual required clamping force",
-    },
-    capacity: {
-      title: "Torque & Power Capacity",
-      desc: "Calculates the maximum torque (T) and power (P) that an existing clutch of known dimensions and plate count can transmit.",
-      inputsHighlight: "Known Do, Di, number of plates, and friction coefficient",
-      solves: "Maximum transmissible Torque T [N·m] and Power P [kW]",
-    },
-    force_limited: {
-      title: "Spring Force Limited",
-      desc: "When the maximum axial clamping force (Fa) is constrained by human effort or spring capacity, calculates the plate count and working pressures.",
-      inputsHighlight: "Maximum axial spring limit [N] and Outer diameter",
-      solves: "Required friction pairs (n') and resulting working surface pressure",
-    },
+  // Calculation mode titles
+  const modeTitles: Record<ClutchSolveMode, string> = {
+    sizing: "Design Dimensions (Do, Di)",
+    plate_count: "Find Required Plates (n1, n2)",
+    capacity: "Torque & Power Capacity",
+    force_limited: "Spring Force Limited",
+  };
+
+  // Helper for radius values displayed when in radius mode
+  const displayedOuter = useMemo(() => {
+    if (dimensionMode === "radii") {
+      const val = evaluateExpression(inputs.diaOuterMm);
+      return val ? String(val / 2) : "";
+    }
+    return inputs.diaOuterMm;
+  }, [dimensionMode, inputs.diaOuterMm]);
+
+  const displayedInner = useMemo(() => {
+    if (dimensionMode === "radii") {
+      const val = evaluateExpression(inputs.diaInnerMm);
+      return val ? String(val / 2) : "";
+    }
+    return inputs.diaInnerMm;
+  }, [dimensionMode, inputs.diaInnerMm]);
+
+  const handleDimensionChange = (isOuter: boolean, val: string) => {
+    const num = evaluateExpression(val);
+    if (dimensionMode === "radii") {
+      const diaVal = num !== null ? String(num * 2) : val;
+      handleInputChange(isOuter ? "diaOuterMm" : "diaInnerMm", diaVal);
+    } else {
+      handleInputChange(isOuter ? "diaOuterMm" : "diaInnerMm", val);
+    }
   };
 
   return (
@@ -260,14 +358,26 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 Clutch Design &amp; Sizing Studio
               </h1>
               <p className="text-xs text-[#6a6f73] mt-0.5">
-                Calculate dimensions, plate count, torque capacity, and clamping forces.
+                Calculate dimensions, plate count, torque capacity, and clamping forces for single and multi-plate clutches.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Preset Quick-Buttons & Scenario Controls */}
+        {/* Action Controls: Presets, AI Parser, Scenario */}
         <div className="flex flex-wrap items-center gap-2">
+          {onOpenAiModal && (
+            <button
+              onClick={onOpenAiModal}
+              className="flex items-center space-x-1.5 rounded-lg bg-[#5624d0] hover:bg-[#a435f0] text-white px-3.5 py-1.5 text-xs font-black shadow-sm hover:shadow transition-all duration-200 active:scale-95"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>Paste Problem Statement</span>
+            </button>
+          )}
+
+          <div className="h-6 w-[1px] bg-[#d1d7dc] mx-1" />
+
           <span className="text-xs font-black uppercase tracking-wider text-[#6a6f73] mr-1">
             Presets:
           </span>
@@ -275,12 +385,12 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
+              className="rounded-lg border border-[#d1d7dc] bg-white px-3 py-1.5 text-xs font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
             >
               {p}
             </button>
           ))}
-          <div className="h-6 w-[1px] bg-[#d1d7dc] mx-1.5" />
+          <div className="h-6 w-[1px] bg-[#d1d7dc] mx-1" />
           <ScenarioControls
             module="clutch"
             inputs={{ ...inputs, mode, theory }}
@@ -291,12 +401,12 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
       {/* Control Bar: Mode & Theory Switchers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Mode Selector with Clear Visual Clarification */}
+        {/* Mode Selector */}
         <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] flex items-center space-x-1.5">
               <Compass className="h-4 w-4 text-[#a435f0]" />
-              <span>What do you want to calculate?</span>
+              <span>Calculation Mode</span>
             </label>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
@@ -320,11 +430,11 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             ))}
           </div>
 
-          {/* Mode Explanatory Card */}
+          {/* Mode Title Card */}
           <div className="bg-[#f6efff]/50 border border-[#d8b4fe] rounded-lg p-2.5 text-xs text-[#2d2f31] flex items-start space-x-2">
             <Info className="h-4 w-4 text-[#a435f0] shrink-0 mt-0.5" />
             <div>
-              <p className="font-black text-[#5624d0]">{modeDescriptions[mode].title}</p>
+              <p className="font-black text-[#5624d0]">{modeTitles[mode]}</p>
             </div>
           </div>
         </div>
@@ -370,7 +480,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             </div>
           </div>
           <p className="text-[11px] text-[#6a6f73] mt-2">
-            <strong>Uniform Wear:</strong> Standard for worn/running clutches (pr = const). <strong>Uniform Pressure:</strong> Applies to brand-new clutches with rigid flat discs.
+            <strong>Uniform Wear:</strong> Conservative design default (p·r = const). <strong>Uniform Pressure:</strong> High-precision brand new friction plates.
           </p>
         </div>
       </div>
@@ -380,21 +490,58 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         {/* Left Column: Input Form (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
           <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5 transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
-            <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5">
+            {/* Header: Title + Clear + Material Picker */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e4e8eb] pb-3.5">
               <div>
                 <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
                   <Sliders className="h-5 w-5 text-[#a435f0]" />
                   <span>Input Parameters</span>
                 </h3>
-                <p className="text-[11px] text-[#6a6f73]">Fill relevant inputs; solved variables update dynamically.</p>
+                <p className="text-[11px] text-[#6a6f73]">Fill given problem values. All mathematical steps update automatically.</p>
               </div>
-              <button
-                onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Pick Material</span>
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={handleClearAll}
+                  title="Clear all fields to enter custom problem"
+                  className="flex items-center space-x-1 rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-2.5 py-1.5 text-xs font-bold text-[#6a6f73] hover:text-[#1c1d1f] hover:bg-white transition-all shadow-sm"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  <span>Clear</span>
+                </button>
+                <button
+                  onClick={() => setIsMaterialModalOpen(true)}
+                  className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Pick Material</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Clutch Construction Type Selector */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-black uppercase tracking-wider text-[#6a6f73] block">
+                Clutch Construction Type
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: "multi", label: "Multi-Plate Disc" },
+                  { id: "single_both", label: "Single Plate (Both Sides, n'=2)" },
+                  { id: "single_one", label: "Single Plate (1 Side, n'=1)" },
+                ].map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => handleClutchTypeChange(t.id as ClutchPlateType)}
+                    className={`rounded-lg px-2 py-2 text-xs font-bold text-center transition-all ${
+                      clutchType === t.id
+                        ? "bg-[#1c1d1f] text-white shadow-sm"
+                        : "bg-[#f7f9fa] text-[#4b5563] border border-[#d1d7dc] hover:bg-white hover:text-[#1c1d1f]"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Input Grid */}
@@ -470,47 +617,100 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </div>
               </div>
 
-              {/* Diameters or Ratio */}
-              <div className="grid grid-cols-2 gap-3.5">
-                <div>
-                  <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Outer Dia Do [mm]</label>
-                  <input
-                    type="text"
-                    placeholder={mode === "sizing" ? "Solved automatically" : "e.g. 250"}
-                    value={inputs.diaOuterMm}
-                    onChange={(e) => handleInputChange("diaOuterMm", e.target.value)}
-                    className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
-                  />
+              {/* Dimension Mode Toggle (Diameters vs Radii) */}
+              <div className="pt-2 border-t border-[#e4e8eb]">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#6a6f73]">
+                    Friction Lining Dimensions
+                  </label>
+                  <div className="flex items-center space-x-1 text-[11px] font-bold">
+                    <button
+                      onClick={() => setDimensionMode("diameters")}
+                      className={`px-2 py-0.5 rounded transition-all ${
+                        dimensionMode === "diameters"
+                          ? "bg-[#a435f0] text-white"
+                          : "bg-[#f7f9fa] text-[#6a6f73] hover:text-[#1c1d1f]"
+                      }`}
+                    >
+                      Do, Di [mm]
+                    </button>
+                    <button
+                      onClick={() => setDimensionMode("radii")}
+                      className={`px-2 py-0.5 rounded transition-all ${
+                        dimensionMode === "radii"
+                          ? "bg-[#a435f0] text-white"
+                          : "bg-[#f7f9fa] text-[#6a6f73] hover:text-[#1c1d1f]"
+                      }`}
+                    >
+                      Ro, Ri [mm]
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Inner Dia Di [mm]</label>
-                  <input
-                    type="text"
-                    placeholder={mode === "sizing" ? "Solved automatically" : "e.g. 150"}
-                    value={inputs.diaInnerMm}
-                    onChange={(e) => handleInputChange("diaInnerMm", e.target.value)}
-                    className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
-                  />
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">
+                      {dimensionMode === "diameters" ? "Outer Dia Do [mm]" : "Outer Radius Ro [mm]"}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={mode === "sizing" ? "Solved automatically" : dimensionMode === "diameters" ? "e.g. 250" : "e.g. 125"}
+                      value={displayedOuter}
+                      onChange={(e) => handleDimensionChange(true, e.target.value)}
+                      className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">
+                      {dimensionMode === "diameters" ? "Inner Dia Di [mm]" : "Inner Radius Ri [mm]"}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={mode === "sizing" ? "Solved automatically" : dimensionMode === "diameters" ? "e.g. 150" : "e.g. 75"}
+                      value={displayedInner}
+                      onChange={(e) => handleDimensionChange(false, e.target.value)}
+                      className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
+                    />
+                  </div>
                 </div>
               </div>
 
-              {/* Ratios & Limits */}
+              {/* Ratios & Direct Force Limits */}
               <div className="grid grid-cols-2 gap-3.5">
                 <div>
-                  <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Diameter Ratio (Di/Do)</label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[#1c1d1f] font-black text-xs">Diameter Ratio (Di/Do)</label>
+                    <div className="flex items-center space-x-1">
+                      <button
+                        onClick={() => handleInputChange("diameterRatio", "0.5")}
+                        className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#f6efff] text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-colors"
+                      >
+                        0.5
+                      </button>
+                      <button
+                        onClick={() => handleInputChange("diameterRatio", "0.577")}
+                        className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#f6efff] text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-colors"
+                        title="Analytical optimum for max torque (1/√3)"
+                      >
+                        0.577
+                      </button>
+                    </div>
+                  </div>
                   <input
                     type="text"
-                    placeholder="e.g. 0.5 or 0.6"
+                    placeholder="e.g. 0.5 or 0.577"
                     value={inputs.diameterRatio}
                     onChange={(e) => handleInputChange("diameterRatio", e.target.value)}
                     className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Axial Force Limit [N]</label>
+                  <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">
+                    {mode === "force_limited" ? "Max Axial Spring Limit [N]" : "Axial Clamping Force Fa [N]"}
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. 600"
+                    placeholder={mode === "force_limited" ? "e.g. 600" : "Optional (e.g. 2500)"}
                     value={inputs.axialForceLimitN}
                     onChange={(e) => handleInputChange("axialForceLimitN", e.target.value)}
                     className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
@@ -518,11 +718,30 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </div>
               </div>
 
-              {/* Multi-plate Discs Configuration */}
-              <div className="pt-2 border-t border-[#e4e8eb]">
-                <label className="text-xs font-black uppercase tracking-wider text-[#6a6f73] block mb-2">
-                  Multi-Plate Discs (n1 driving + n2 driven)
+              {/* Radial width fraction if given as b = k * Ro */}
+              <div>
+                <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">
+                  Radial Width Fraction b/Ro (Optional)
                 </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 0.2 (where b = 0.2·Ro)"
+                  value={inputs.radialWidthFraction}
+                  onChange={(e) => handleInputChange("radialWidthFraction", e.target.value)}
+                  className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
+                />
+              </div>
+
+              {/* Multi-plate Discs Configuration (Visible in multi mode or custom) */}
+              <div className="pt-2 border-t border-[#e4e8eb]">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-black uppercase tracking-wider text-[#6a6f73]">
+                    Plate Stack &amp; Active Contact Surfaces
+                  </label>
+                  <span className="text-[11px] font-mono font-bold text-[#5624d0]">
+                    n&apos; = n1 + n2 - 1
+                  </span>
+                </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Driving n1</label>
@@ -545,7 +764,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     />
                   </div>
                   <div>
-                    <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Surfaces n&apos;</label>
+                    <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Active Pairs n&apos;</label>
                     <input
                       type="text"
                       placeholder="Auto"
@@ -579,7 +798,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                   <span className="text-sm font-extrabold text-[#4b5563]">N</span>
                 </p>
                 <span className="text-xs text-[#6a6f73] font-mono font-bold">
-                  n&apos; = {result.summary.numFrictionSurfaces} pairs
+                  n&apos; = {result.summary.numFrictionSurfaces} active pairs
                 </span>
               </div>
 
@@ -610,7 +829,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
         {/* Right Column: Visualizations & KaTeX Step Workings (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Interactive SVG Diagram with Explanation */}
+          {/* Interactive SVG Diagram */}
           {result.success && result.summary && (
             <div className="space-y-4 pt-2">
               <ClutchDiagramSvg
@@ -653,61 +872,51 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                         {formatNum(theory === "uniform_wear" ? result.summary.torqueNm : compResult.summary.torqueNm, 2)} N·m
                       </td>
                       <td className="py-2 font-black text-[#b4690e]">
-                        {formatNum(theory === "uniform_pressure" ? result.summary.torqueNm : compResult.summary.torqueNm, 2)} N·m
+                        {formatNum(theory === "uniform_wear" ? compResult.summary.torqueNm : result.summary.torqueNm, 2)} N·m
                       </td>
-                      <td className="py-2 text-[#1e6055] font-black">
-                        +
-                        {formatNum(
+                      <td className="py-2 font-black text-[#1e6055]">
+                        +{formatNum(
                           Math.abs(
                             ((compResult.summary.torqueNm - result.summary.torqueNm) /
                               Math.min(compResult.summary.torqueNm, result.summary.torqueNm)) *
                               100
                           ),
                           1
-                        )}
-                        %
+                        )}%
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-2 text-[#4b5563] font-sans font-bold">Clamping Force Fa</td>
-                      <td className="py-2 font-bold">
+                      <td className="py-2 text-[#4b5563] font-sans font-bold">Axial Force Fa</td>
+                      <td className="py-2 font-bold text-[#5624d0]">
                         {formatNum(theory === "uniform_wear" ? result.summary.axialForceN : compResult.summary.axialForceN, 1)} N
                       </td>
-                      <td className="py-2 font-bold">
-                        {formatNum(theory === "uniform_pressure" ? result.summary.axialForceN : compResult.summary.axialForceN, 1)} N
+                      <td className="py-2 font-bold text-[#b4690e]">
+                        {formatNum(theory === "uniform_wear" ? compResult.summary.axialForceN : result.summary.axialForceN, 1)} N
                       </td>
-                      <td className="py-2 text-[#6a6f73] font-bold">
-                        +
+                      <td className="py-2 text-[#6a6f73]">
                         {formatNum(
-                          Math.abs(
-                            ((compResult.summary.axialForceN - result.summary.axialForceN) /
-                              Math.min(compResult.summary.axialForceN, result.summary.axialForceN)) *
-                              100
-                          ),
+                          ((compResult.summary.axialForceN - result.summary.axialForceN) /
+                            result.summary.axialForceN) *
+                            100,
                           1
-                        )}
-                        %
+                        )}%
                       </td>
                     </tr>
                     <tr>
                       <td className="py-2 text-[#4b5563] font-sans font-bold">Mean Diameter Dm</td>
-                      <td className="py-2 font-bold">
+                      <td className="py-2 text-[#5624d0]">
                         {formatNum(theory === "uniform_wear" ? result.summary.meanDiaMm : compResult.summary.meanDiaMm, 2)} mm
                       </td>
-                      <td className="py-2 font-bold">
-                        {formatNum(theory === "uniform_pressure" ? result.summary.meanDiaMm : compResult.summary.meanDiaMm, 2)} mm
+                      <td className="py-2 text-[#b4690e]">
+                        {formatNum(theory === "uniform_wear" ? compResult.summary.meanDiaMm : result.summary.meanDiaMm, 2)} mm
                       </td>
-                      <td className="py-2 text-[#6a6f73] font-bold">
-                        +
+                      <td className="py-2 text-[#6a6f73]">
                         {formatNum(
-                          Math.abs(
-                            ((compResult.summary.meanDiaMm - result.summary.meanDiaMm) /
-                              Math.min(compResult.summary.meanDiaMm, result.summary.meanDiaMm)) *
-                              100
-                          ),
-                          1
-                        )}
-                        %
+                          ((compResult.summary.meanDiaMm - result.summary.meanDiaMm) /
+                            result.summary.meanDiaMm) *
+                            100,
+                          2
+                        )}%
                       </td>
                     </tr>
                   </tbody>
@@ -716,48 +925,54 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             </div>
           )}
 
-          {/* What-If Sensitivity Curve */}
+          {/* Interactive What-If Sensitivity Graph */}
           {result.success && result.summary && (
             <ClutchWhatIfCurve
               Do={result.summary.diaOuterMm}
               mu={parsedInputs.mu}
-              pMax={parsedInputs.pAllowableMpa || 0.35}
+              pMax={result.summary.maxPressureMpa}
               nPrime={result.summary.numFrictionSurfaces}
               currentRatio={result.summary.diaOuterMm > 0 ? result.summary.diaInnerMm / result.summary.diaOuterMm : 0.5}
-              onSelectRatio={(r) => handleInputChange("diameterRatio", r.toString())}
+              onSelectRatio={(ratio) => handleInputChange("diameterRatio", ratio.toFixed(3))}
             />
           )}
 
-          {/* Step-by-Step KaTeX Derivation Panel */}
-          {result.success && (
-            <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
-              <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5 mb-4">
-                <div>
-                  <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">
-                    <CheckCircle2 className="h-5 w-5 text-[#1e6055]" />
-                    <span>Deterministic Mathematical Derivations</span>
-                  </h3>
-                  <p className="text-xs font-semibold text-[#6a6f73]">
-                    Step-by-step analytical equations and substitutions for {modeDescriptions[mode].title}.
-                  </p>
-                </div>
-              </div>
+          {/* Mathematical Step Workings Display */}
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
+            <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] mb-4 flex items-center space-x-2 border-b border-[#e4e8eb] pb-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#f6efff] text-[#5624d0]">
+                <CheckCircle2 className="h-4 w-4" />
+              </span>
+              <span>Complete Step-by-Step Mathematical Derivation</span>
+            </h3>
 
-              <StepDisplay steps={result.steps} warnings={result.warnings} />
-            </div>
-          )}
+            {!result.success ? (
+              <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800">
+                <p className="font-bold">Computation Error:</p>
+                <p className="mt-1">{result.error}</p>
+                <p className="mt-2 text-rose-600">
+                  Tip: Provide either (Power + Speed), (Torque), or select a Preset above to get valid results.
+                </p>
+              </div>
+            ) : (
+              <StepDisplay
+                steps={result.steps}
+                warnings={result.warnings}
+              />
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Friction Material Selector Modal */}
+      {/* Material Selector Modal */}
       <MaterialSelectorModal
         isOpen={isMaterialModalOpen}
         onClose={() => setIsMaterialModalOpen(false)}
-        filterCategory="clutch"
-        onSelect={(muVal, pVal) => {
-          handleInputChange("mu", muVal.toString());
-          handleInputChange("pAllowableMpa", pVal.toString());
+        onSelect={(mu, pMax) => {
+          handleInputChange("mu", String(mu));
+          handleInputChange("pAllowableMpa", String(pMax));
         }}
+        filterCategory="clutch"
       />
     </div>
   );
