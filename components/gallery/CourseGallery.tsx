@@ -102,29 +102,6 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
 
   return (
     <div className="space-y-10 animate-fade-in-scale">
-      {/* Udemy Hero Banner Section */}
-      <div className="rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
-        <div className="space-y-2 max-w-2xl">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#1c1d1f] tracking-tight">
-            Skills to transform your DME examination performance
-          </h1>
-          <p className="text-sm text-[#4b5563] leading-relaxed">
-            From single &amp; multi-plate clutches to block and differential band brakes — solve and explore all 12 canonical question sets with full step-by-step mathematical derivations.
-          </p>
-        </div>
-
-        {/* Quick Summary Pill Stats */}
-        <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-          <div className="bg-white rounded-lg border border-[#d1d7dc] px-4 py-3 text-center shadow-sm hover:border-[#a435f0] transition-colors">
-            <p className="text-2xl font-black text-[#a435f0]">12</p>
-            <p className="text-xs font-bold text-[#6a6f73]">Exam Problems</p>
-          </div>
-          <div className="bg-white rounded-lg border border-[#d1d7dc] px-4 py-3 text-center shadow-sm hover:border-[#1e6055] transition-colors">
-            <p className="text-2xl font-black text-[#1e6055]">100%</p>
-            <p className="text-xs font-bold text-[#6a6f73]">Deterministic</p>
-          </div>
-        </div>
-      </div>
 
       {/* Course Categories */}
       {renderGroup(
