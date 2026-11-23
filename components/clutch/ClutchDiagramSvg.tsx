@@ -24,11 +24,11 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   Fa,
   theory,
 }) => {
-  const width = 480;
+  const width = 460;
   const height = 280;
 
   // Concentric disc coordinates (Left side)
-  const cx = 135;
+  const cx = 130;
   const cy = 140;
   const maxR = 90;
 
@@ -38,35 +38,32 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   const rMean = (rOuter + rInner) / 2;
 
   // Plate Stack coordinates (Right side)
-  const stackX = 285;
+  const stackX = 280;
   const stackTopY = 40;
   const stackHeight = 180;
   const totalPlates = Math.max(2, Math.min(16, n1 + n2));
   const plateSpacing = stackHeight / (totalPlates + 1);
 
   return (
-    <div className="relative rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-2 mb-2">
-        <span className="text-xs font-mono font-bold text-[#0f172a] flex items-center space-x-2">
-          <span className="h-2 w-2 rounded-sm bg-[#0284c7]"></span>
-          <span>SCHEMATIC: FRICTION INTERFACE &amp; MULTI-PLATE STACK</span>
+    <div className="relative rounded-xl border border-[#d1d7dc] bg-[#ffffff] p-4 shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-2 mb-2">
+        <span className="text-xs font-bold text-[#1c1d1f] flex items-center space-x-1.5">
+          <span className="h-2 w-2 rounded-full bg-[#a435f0] animate-pulse"></span>
+          <span>Interactive Friction Disc &amp; Plate Stack Geometry</span>
         </span>
-        <span className="rounded bg-[#f1f5f9] px-2 py-0.5 text-[10px] font-mono font-bold text-[#0369a1] border border-[#cbd5e1]">
-          {theory === "uniform_wear" ? "UNIFORM WEAR (Eq 13.9d)" : "UNIFORM PRESSURE (Eq 13.9a)"}
+        <span className="rounded bg-[#f6efff] px-2 py-0.5 text-[10px] font-mono font-bold text-[#5624d0] border border-[#d8b4fe]">
+          {theory === "uniform_wear" ? "Uniform Wear (Standard)" : "Uniform Pressure"}
         </span>
       </div>
 
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto select-none font-sans">
-        {/* Subtle engineering CAD grid */}
+        {/* Subtle grid pattern background */}
         <defs>
-          <pattern id="clutch-grid-tech" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f1f5f9" strokeWidth="1" />
-          </pattern>
-          <pattern id="friction-hatch" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#0284c7" strokeWidth="1.2" strokeOpacity="0.4" />
+          <pattern id="clutch-grid-light" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#f0f2f5" strokeWidth="1" />
           </pattern>
         </defs>
-        <rect width={width} height={height} fill="url(#clutch-grid-tech)" rx="6" />
+        <rect width={width} height={height} fill="url(#clutch-grid-light)" rx="8" />
 
         {/* ================= LEFT: CONCENTRIC DISC ================= */}
         {/* Outer Friction Disc */}
@@ -74,9 +71,9 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
           cx={cx}
           cy={cy}
           r={rOuter}
-          fill="url(#friction-hatch)"
-          stroke="#0284c7"
-          strokeWidth="2"
+          fill="#f6efff"
+          stroke="#a435f0"
+          strokeWidth="2.5"
           className="transition-all duration-300"
         />
 
@@ -86,64 +83,57 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
           cy={cy}
           r={rInner}
           fill="#ffffff"
-          stroke="#475569"
-          strokeWidth="1.5"
+          stroke="#6a6f73"
+          strokeWidth="2"
           className="transition-all duration-300"
         />
 
-        {/* Mean Radius Guideline (Dashed Centerline) */}
+        {/* Mean Radius Guideline (Dashed) */}
         <circle
           cx={cx}
           cy={cy}
           r={rMean}
           fill="none"
-          stroke="#d97706"
-          strokeWidth="1.2"
+          stroke="#b4690e"
+          strokeWidth="1.5"
           strokeDasharray="4 3"
         />
 
-        {/* Centerline Crosshair */}
-        <line x1={cx - 12} y1={cy} x2={cx + 12} y2={cy} stroke="#64748b" strokeWidth="1" />
-        <line x1={cx} y1={cy - 12} x2={cx} y2={cy + 12} stroke="#64748b" strokeWidth="1" />
-        <text x={cx + 14} y={cy + 3} fill="#64748b" fontSize="8" fontFamily="monospace">CL</text>
+        {/* Center crosshair */}
+        <line x1={cx - 8} y1={cy} x2={cx + 8} y2={cy} stroke="#919496" strokeWidth="1" />
+        <line x1={cx} y1={cy - 8} x2={cx} y2={cy + 8} stroke="#919496" strokeWidth="1" />
 
         {/* Outer Dimension Label Do */}
-        <line x1={cx - rOuter} y1={cy - rOuter - 8} x2={cx + rOuter} y2={cy - rOuter - 8} stroke="#0284c7" strokeWidth="1" />
-        <line x1={cx - rOuter} y1={cy - rOuter - 12} x2={cx - rOuter} y2={cy - rOuter - 4} stroke="#0284c7" strokeWidth="1" />
-        <line x1={cx + rOuter} y1={cy - rOuter - 12} x2={cx + rOuter} y2={cy - rOuter - 4} stroke="#0284c7" strokeWidth="1" />
         <text
           x={cx}
-          y={cy - rOuter - 11}
+          y={cy - rOuter - 6}
           textAnchor="middle"
-          fill="#0369a1"
-          fontSize="9"
+          fill="#a435f0"
+          fontSize="10"
           fontFamily="monospace"
           fontWeight="bold"
         >
-          ⌀Do = {formatNum(Do, 1)} mm
+          Do = {formatNum(Do, 1)} mm
         </text>
 
         {/* Inner Dimension Label Di */}
-        <line x1={cx - rInner} y1={cy + rInner + 8} x2={cx + rInner} y2={cy + rInner + 8} stroke="#475569" strokeWidth="1" />
-        <line x1={cx - rInner} y1={cy + rInner + 4} x2={cx - rInner} y2={cy + rInner + 12} stroke="#475569" strokeWidth="1" />
-        <line x1={cx + rInner} y1={cy + rInner + 4} x2={cx + rInner} y2={cy + rInner + 12} stroke="#475569" strokeWidth="1" />
         <text
           x={cx}
-          y={cy + rInner + 20}
+          y={cy + rInner + 14}
           textAnchor="middle"
-          fill="#334155"
-          fontSize="9"
+          fill="#6a6f73"
+          fontSize="10"
           fontFamily="monospace"
           fontWeight="bold"
         >
-          ⌀Di = {formatNum(Di, 1)} mm
+          Di = {formatNum(Di, 1)} mm
         </text>
 
         {/* Mean Diameter Label Dm */}
         <text
-          x={cx + rMean + 6}
+          x={cx + rMean + 5}
           y={cy}
-          fill="#d97706"
+          fill="#b4690e"
           fontSize="9"
           fontFamily="monospace"
           alignmentBaseline="middle"
@@ -159,21 +149,20 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
           y={stackTopY - 10}
           width={16}
           height={stackHeight + 20}
-          fill="#e2e8f0"
-          stroke="#cbd5e1"
+          fill="#e4e8eb"
+          stroke="#d1d7dc"
           strokeWidth="1.5"
-          rx="1"
+          rx="2"
         />
         <text
           x={stackX + 58}
           y={stackTopY - 16}
           textAnchor="middle"
-          fill="#64748b"
+          fill="#6a6f73"
           fontSize="9"
-          fontFamily="monospace"
           fontWeight="bold"
         >
-          SHAFT / PACK ({n1} + {n2})
+          Plate Stack ({n1} driving + {n2} driven)
         </text>
 
         {/* Disc Pack Plates */}
@@ -190,8 +179,8 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
                 y={yPos - 3}
                 width={plateWidth}
                 height={6}
-                fill={isDriving ? "#0284c7" : "#1e293b"}
-                rx="1"
+                fill={isDriving ? "#a435f0" : "#2d2f31"}
+                rx="2"
               />
               {/* Friction interface contact lines */}
               {idx < totalPlates - 1 && (
@@ -200,7 +189,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
                   y1={yPos + plateSpacing / 2}
                   x2={stackX + 94}
                   y2={yPos + plateSpacing / 2}
-                  stroke="#cbd5e1"
+                  stroke="#e4e8eb"
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />
@@ -218,14 +207,14 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
               y1={cy}
               x2={stackX + 10}
               y2={cy}
-              stroke="#059669"
-              strokeWidth="2"
+              stroke="#b32d0f"
+              strokeWidth="2.5"
             />
             <polygon
               points={`${stackX + 16},${cy} ${stackX + 8},${cy - 4} ${stackX + 8},${cy + 4}`}
-              fill="#059669"
+              fill="#b32d0f"
             />
-            <text x={stackX - 12} y={cy + 3} fill="#059669" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="end">
+            <text x={stackX - 14} y={cy + 3} fill="#b32d0f" fontSize="9" fontWeight="bold" textAnchor="end">
               Fa
             </text>
 
@@ -235,14 +224,14 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
               y1={cy}
               x2={stackX + 106}
               y2={cy}
-              stroke="#059669"
-              strokeWidth="2"
+              stroke="#b32d0f"
+              strokeWidth="2.5"
             />
             <polygon
               points={`${stackX + 100},${cy} ${stackX + 108},${cy - 4} ${stackX + 108},${cy + 4}`}
-              fill="#059669"
+              fill="#b32d0f"
             />
-            <text x={stackX + 128} y={cy + 3} fill="#059669" fontSize="9" fontFamily="monospace" fontWeight="bold" textAnchor="start">
+            <text x={stackX + 130} y={cy + 3} fill="#b32d0f" fontSize="9" fontWeight="bold" textAnchor="start">
               Fa
             </text>
           </g>
@@ -250,11 +239,11 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
 
         {/* Legend */}
         <g transform={`translate(${stackX - 5}, ${height - 22})`}>
-          <rect x="0" y="0" width="10" height="6" fill="#0284c7" rx="1" />
-          <text x="14" y="6" fill="#475569" fontSize="8" fontFamily="monospace">Driving (n1)</text>
+          <rect x="0" y="0" width="10" height="6" fill="#a435f0" rx="1" />
+          <text x="14" y="6" fill="#6a6f73" fontSize="9">Driving (n1)</text>
 
-          <rect x="75" y="0" width="10" height="6" fill="#1e293b" rx="1" />
-          <text x="89" y="6" fill="#475569" fontSize="8" fontFamily="monospace">Driven (n2)</text>
+          <rect x="75" y="0" width="10" height="6" fill="#2d2f31" rx="1" />
+          <text x="89" y="6" fill="#6a6f73" fontSize="9">Driven (n2)</text>
         </g>
 
         {/* Active friction surfaces text */}
@@ -262,12 +251,12 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
           x={stackX + 58}
           y={height - 8}
           textAnchor="middle"
-          fill="#0369a1"
+          fill="#5624d0"
           fontSize="9"
           fontFamily="monospace"
           fontWeight="bold"
         >
-          n&apos; = {nPrime} active pairs
+          n&apos; = {nPrime} active friction pairs
         </text>
       </svg>
     </div>

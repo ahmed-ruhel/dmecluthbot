@@ -58,15 +58,15 @@ export default function HomePage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#f7f9fa] text-[#1c1d1f] flex flex-col font-sans">
-      {/* Global Navigation Bar (Top banner removed) */}
+    <div className="min-h-screen bg-[#ffffff] text-[#1c1d1f] flex flex-col font-sans">
+      {/* Global Udemy-Style Navigation Bar */}
       <Navbar
         activeTab={activeTab}
         onSelectTab={setActiveTab}
         onOpenAiModal={() => setIsAiModalOpen(true)}
       />
 
-      {/* Main Content Area: Fluid Edge-to-Edge */}
+      {/* Main Content Area: Fluid Udemy Style Container */}
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === "clutch" && (
           <ClutchStudio
@@ -95,7 +95,7 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* AI Parser Modal */}
+      {/* AI Problem Autofill Modal */}
       <AiParserModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
