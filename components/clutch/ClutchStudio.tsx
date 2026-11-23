@@ -218,12 +218,12 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-scale">
       {/* Udemy Course Header Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
         <div>
           <div className="flex items-center space-x-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm transition-transform duration-300 hover:scale-105">
               <Layers className="h-6 w-6" />
             </span>
             <div>
@@ -231,9 +231,6 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
                   Clutch Design &amp; Sizing Studio
                 </h1>
-                <span className="rounded bg-[#eceb98] px-2.5 py-0.5 text-xs font-black text-[#3d3c0a]">
-                  Bestseller Module
-                </span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-[#6a6f73] mt-1">
                 <div className="flex items-center text-[#e59819]">
@@ -242,8 +239,6 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                   ))}
                 </div>
                 <span className="font-bold text-[#b4690e]">4.9 (4,40,545 ratings)</span>
-                <span>&bull;</span>
-                <span className="font-bold text-[#1c1d1f]">23EMEC301 Chapter 13</span>
               </div>
             </div>
           </div>
@@ -252,13 +247,13 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         {/* Preset Quick-Buttons & Scenario Controls */}
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-black uppercase tracking-wider text-[#6a6f73] mr-1">
-            Exam Presets:
+            Presets:
           </span>
           {(["C1", "C2", "C3", "C4", "C5"] as const).map((p) => (
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-lg border border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
             >
               {p}
             </button>
@@ -275,7 +270,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
       {/* Control Bar: Mode & Theory Switchers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Mode Selector */}
-        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Calculation Mode
           </label>
@@ -289,7 +284,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               <button
                 key={m.id}
                 onClick={() => setMode(m.id as ClutchSolveMode)}
-                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-black transition-all text-center ${
+                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 text-center hover:-translate-y-0.5 active:scale-95 ${
                   mode === m.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
                     : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
@@ -302,7 +297,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         </div>
 
         {/* Theory Selector */}
-        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
           <div className="flex items-center justify-between mb-3">
             <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f]">
               Theory Model
@@ -320,23 +315,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setTheory("uniform_wear")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all ${
+              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
                 theory === "uniform_wear"
                   ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
                   : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
               }`}
             >
-              Uniform Wear (Standard &bull; Eq 13.9d)
+              Uniform Wear (Standard)
             </button>
             <button
               onClick={() => setTheory("uniform_pressure")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all ${
+              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
                 theory === "uniform_pressure"
                   ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
                   : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
               }`}
             >
-              Uniform Pressure (New &bull; Eq 13.9a)
+              Uniform Pressure (New)
             </button>
           </div>
         </div>
@@ -346,7 +341,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Input Form (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5">
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5 transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
             <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5">
               <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
                 <Sliders className="h-5 w-5 text-[#a435f0]" />
@@ -354,7 +349,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               </h3>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
+                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Pick Material</span>
@@ -523,10 +518,10 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             </div>
           </div>
 
-          {/* Quick Summary Results Badges (Udemy Style Cards) */}
+          {/* Quick Summary Results Badges (Udemy Style Cards with Lift Animations) */}
           {result.success && result.summary && (
             <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#a435f0] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#a435f0] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Torque Capacity</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#a435f0] font-mono">
                   {formatNum(result.summary.torqueNm, 2)} <span className="text-sm font-extrabold text-[#4b5563]">N·m</span>
@@ -536,7 +531,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Axial Clamping Fa</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#1e6055] font-mono">
                   {formatNum(result.summary.actualAxialForceN || result.summary.axialForceN, 1)}{" "}
@@ -547,7 +542,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Dimensions (Do &times; Di)</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
                   {formatNum(result.summary.diaOuterMm, 1)} &times; {formatNum(result.summary.diaInnerMm, 1)}{" "}
@@ -558,7 +553,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Working Pressure</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#b4690e] font-mono">
                   {formatNum(result.summary.maxPressureMpa, 4)}{" "}
@@ -590,7 +585,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
           {/* Side-by-Side Comparison Card if toggled */}
           {compareBoth && result.success && result.summary && compResult && compResult.success && compResult.summary && (
-            <div className="rounded-xl border border-[#d8b4fe] bg-[#f6efff]/40 p-5 shadow-sm">
+            <div className="rounded-xl border border-[#d8b4fe] bg-[#f6efff]/40 p-5 shadow-sm transition-all hover:border-[#a435f0]">
               <div className="flex items-center space-x-2 border-b border-[#d8b4fe]/60 pb-3 mb-3.5">
                 <Scale className="h-5 w-5 text-[#a435f0]" />
                 <h4 className="text-sm font-black text-[#1c1d1f] uppercase tracking-wider">
@@ -692,7 +687,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
           {/* Step-by-Step KaTeX Derivation Panel */}
           {result.success && (
-            <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
               <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5 mb-4">
                 <div>
                   <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">
@@ -700,7 +695,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     <span>Deterministic Mathematical Derivations</span>
                   </h3>
                   <p className="text-xs font-semibold text-[#6a6f73]">
-                    Formulas and step-by-step substitutions cited from Mahadevan &amp; Reddy (4th Ed).
+                    Step-by-step analytical equations and substitutions.
                   </p>
                 </div>
               </div>

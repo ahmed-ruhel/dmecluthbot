@@ -93,12 +93,12 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in-scale">
       {/* Header & Preset Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
         <div>
           <div className="flex items-center space-x-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm transition-transform duration-300 hover:scale-105">
               <RotateCcw className="h-6 w-6" />
             </span>
             <div>
@@ -106,9 +106,6 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
                   Block (Shoe) Brake Studio
                 </h1>
-                <span className="rounded bg-[#eceb98] px-2.5 py-0.5 text-xs font-black text-[#3d3c0a]">
-                  Premium Module
-                </span>
               </div>
               <div className="flex items-center space-x-2 text-xs text-[#6a6f73] mt-1">
                 <div className="flex items-center text-[#e59819]">
@@ -117,8 +114,6 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                   ))}
                 </div>
                 <span className="font-bold text-[#b4690e]">4.7 (13,620 ratings)</span>
-                <span>&bull;</span>
-                <span className="font-bold text-[#1c1d1f]">Short Shoe Friction &bull; Eq 13.17</span>
               </div>
             </div>
           </div>
@@ -129,7 +124,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-lg border border-[#d1d7dc] bg-white px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
             >
               {p}
             </button>
@@ -145,7 +140,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
 
       {/* Case & Rotation Selector */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Geometry Case (Pivot &amp; Ft Line)
           </label>
@@ -158,7 +153,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
               <button
                 key={c.id}
                 onClick={() => setBrakeCase(c.id as BlockBrakeCase)}
-                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-black transition-all text-center ${
+                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 text-center hover:-translate-y-0.5 active:scale-95 ${
                   brakeCase === c.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
                     : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
@@ -170,7 +165,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           </div>
         </div>
 
-        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm">
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
           <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
             Drum Rotation Direction
           </label>
@@ -182,7 +177,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
               <button
                 key={r.id}
                 onClick={() => setRotation(r.id as RotationDirection)}
-                className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all ${
+                className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
                   rotation === r.id
                     ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
                     : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
@@ -198,7 +193,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
       {/* Main Grid: Inputs (5 cols) & Diagrams/Results (7 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5">
+          <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5 transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
             <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5">
               <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
                 <Sliders className="h-5 w-5 text-[#a435f0]" />
@@ -206,7 +201,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
               </h3>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
+                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
               >
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Pick Material</span>
@@ -323,10 +318,10 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
             </div>
           </div>
 
-          {/* Quick Summary Results Badges */}
+          {/* Quick Summary Results Badges (With Hover Elevation) */}
           {s && (
             <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#5624d0] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#5624d0] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Operating Force F</span>
                 <p className={`mt-1 text-2xl sm:text-3xl font-black font-mono ${s.isSelfLocking ? "text-rose-600" : "text-[#5624d0]"}`}>
                   {formatNum(s.operatingForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
@@ -336,7 +331,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1e6055] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Tangential Force Ft</span>
                 <p className="mt-1 text-2xl sm:text-3xl font-black text-[#1e6055] font-mono">
                   {formatNum(s.tangentialForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
@@ -346,7 +341,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#b4690e] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Heat Rate H</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#b4690e] font-mono">
                   {formatNum(s.heatRateKw, 2)} <span className="text-sm font-extrabold text-[#4b5563]">kW</span>
@@ -356,7 +351,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                 </span>
               </div>
 
-              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f] transition-all">
+              <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#1c1d1f] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
                 <span className="text-xs font-mono uppercase font-black text-[#6a6f73]">Critical Offset c_crit</span>
                 <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
                   {formatNum(s.criticalOffsetMm, 1)} <span className="text-sm font-extrabold text-[#4b5563]">mm</span>
@@ -388,7 +383,7 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           )}
 
           {result.success && (
-            <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm">
+            <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
               <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5 mb-4">
                 <div>
                   <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">
