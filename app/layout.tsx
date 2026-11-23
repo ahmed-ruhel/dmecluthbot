@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "GripLab | Clutch & Brake Force Calculator (DME Sem V)",
   description:
-    "Deterministic design and analysis tool for single/multi-plate clutches, block brakes, and band brakes per KLE Tech 23EMEC301 and Mahadevan & Reddy Design Data Handbook.",
+    "Deterministic design and analysis tool for single/multi-plate clutches, block brakes, and band brakes. Full step-by-step solutions for machine element design problems.",
 };
 
 export default function RootLayout({

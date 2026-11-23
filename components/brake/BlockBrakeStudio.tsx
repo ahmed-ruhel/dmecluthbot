@@ -107,14 +107,6 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
                   Block (Shoe) Brake Studio
                 </h1>
               </div>
-              <div className="flex items-center space-x-2 text-xs text-[#6a6f73] mt-1">
-                <div className="flex items-center text-[#e59819]">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                  ))}
-                </div>
-                <span className="font-bold text-[#b4690e]">4.7 (13,620 ratings)</span>
-              </div>
             </div>
           </div>
         </div>

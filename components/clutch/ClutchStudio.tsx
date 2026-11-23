@@ -612,7 +612,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         <div className="lg:col-span-7 space-y-6">
           {/* Interactive SVG Diagram with Explanation */}
           {result.success && result.summary && (
-            <div className="space-y-2">
+            <div className="space-y-4 pt-2">
               <ClutchDiagramSvg
                 Do={result.summary.diaOuterMm}
                 Di={result.summary.diaInnerMm}
@@ -623,9 +623,6 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                 Fa={result.summary.actualAxialForceN || result.summary.axialForceN}
                 theory={theory}
               />
-              <p className="text-[11px] text-[#6a6f73] px-1">
-                <strong>Diagram Guide:</strong> Left side displays the friction disc contact ring (outer diameter Do, inner hole Di, and mean effective diameter Dm). Right side depicts the disc pack stack ({result.summary.numDrivingDiscs} purple driving discs keyed to input shaft, interleaved with {result.summary.numDrivenDiscs} dark driven discs) clamped by axial force Fa.
-              </p>
             </div>
           )}
 

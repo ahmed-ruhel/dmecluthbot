@@ -65,7 +65,7 @@ export const MaterialSelectorModal: React.FC<MaterialSelectorModalProps> = ({
               <span>Friction Materials Library</span>
             </h3>
             <p className="text-xs text-[#6a6f73]">
-              Standard Friction Pairs &bull; Mahadevan &amp; Reddy (4th Ed)
+              Standard Friction Material Pairs
             </p>
           </div>
           <button
@@ -113,7 +113,6 @@ export const MaterialSelectorModal: React.FC<MaterialSelectorModalProps> = ({
                     </span>
                   </div>
                   <p className="text-[11px] text-[#6a6f73] mt-0.5 leading-relaxed">{mat.notes}</p>
-                  <span className="text-[10px] text-[#6a6f73] font-mono">Table: {mat.source_table}</span>
                 </div>
 
                 <div className="text-right shrink-0">

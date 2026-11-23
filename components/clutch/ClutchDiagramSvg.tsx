@@ -25,7 +25,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
   theory,
 }) => {
   const width = 460;
-  const height = 280;
+  const height = 310;
 
   // Concentric disc coordinates (Left side)
   const cx = 130;
@@ -238,7 +238,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
         )}
 
         {/* Legend */}
-        <g transform={`translate(${stackX - 5}, ${height - 22})`}>
+        <g transform={`translate(${stackX - 5}, ${height - 42})`}>
           <rect x="0" y="0" width="10" height="6" fill="#a435f0" rx="1" />
           <text x="14" y="6" fill="#6a6f73" fontSize="9">Driving (n1)</text>
 
@@ -249,7 +249,7 @@ export const ClutchDiagramSvg: React.FC<ClutchDiagramSvgProps> = ({
         {/* Active friction surfaces text */}
         <text
           x={stackX + 58}
-          y={height - 8}
+          y={height - 20}
           textAnchor="middle"
           fill="#5624d0"
           fontSize="9"

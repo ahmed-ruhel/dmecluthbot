@@ -2,7 +2,7 @@
 
 import React from "react";
 import { GALLERY_PROBLEMS } from "@/data/gallery-problems";
-import { BookOpen, Layers, RotateCcw, Disc, Star, ArrowRight } from "lucide-react";
+import { BookOpen, Layers, RotateCcw, Disc, ArrowRight } from "lucide-react";
 
 interface CourseGalleryProps {
   onSelectProblem: (moduleId: "clutch" | "block_brake" | "band_brake", presetCode: string) => void;
@@ -12,28 +12,16 @@ const moduleTheme = {
   clutch: {
     name: "Clutch Design",
     gradient: "from-[#a435f0] to-[#5624d0]",
-    price: "₹459.00",
-    oldPrice: "₹3,199.00",
-    ratingsCount: "4,40,545 ratings",
-    rating: "4.8",
     icon: <Layers className="h-5 w-5 text-[#a435f0]" />,
   },
   block_brake: {
     name: "Block Brake",
     gradient: "from-[#2d2f31] to-[#0f172a]",
-    price: "₹449.00",
-    oldPrice: "₹1,919.00",
-    ratingsCount: "13,620 ratings",
-    rating: "4.7",
     icon: <RotateCcw className="h-5 w-5 text-[#a435f0]" />,
   },
   band_brake: {
     name: "Band Brake",
     gradient: "from-[#1e6055] to-[#0f4037]",
-    price: "₹629.00",
-    oldPrice: "₹4,359.00",
-    ratingsCount: "52,203 ratings",
-    rating: "4.9",
     icon: <Disc className="h-5 w-5 text-[#a435f0]" />,
   },
 };
@@ -91,30 +79,10 @@ export const CourseGallery: React.FC<CourseGalleryProps> = ({ onSelectProblem })
                     <Disc className="absolute -bottom-6 -right-6 h-28 w-28 text-white/10 transition-transform duration-700 ease-out group-hover:rotate-45 pointer-events-none" />
                   </div>
 
-                  {/* Course Title & Author / Source */}
-                  <h3 className="text-sm font-black text-[#1c1d1f] group-hover:text-[#5624d0] line-clamp-2 leading-snug mb-1 transition-colors">
+                  {/* Course Title */}
+                  <h3 className="text-sm font-black text-[#1c1d1f] group-hover:text-[#5624d0] line-clamp-2 leading-snug mb-3 transition-colors">
                     {p.title}
                   </h3>
-                  <p className="text-xs text-[#6a6f73] line-clamp-1 mb-1.5 font-medium">
-                    {p.source}
-                  </p>
-
-                  {/* Rating & Review Stars */}
-                  <div className="flex items-center space-x-1.5 text-xs mb-2">
-                    <span className="font-black text-[#b4690e]">{theme.rating}</span>
-                    <div className="flex items-center text-[#e59819] transition-transform duration-200 group-hover:scale-105">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-[11px] text-[#6a6f73]">({theme.ratingsCount})</span>
-                  </div>
-
-                  {/* Price Row */}
-                  <div className="flex items-baseline space-x-2 mb-2.5">
-                    <span className="text-base font-black text-[#1c1d1f]">{theme.price}</span>
-                    <span className="text-xs text-[#6a6f73] line-through">{theme.oldPrice}</span>
-                  </div>
                 </div>
 
                 {/* Footer Action */}
