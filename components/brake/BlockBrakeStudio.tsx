@@ -8,7 +8,7 @@ import { BlockBrakeDiagramSvg } from "./BlockBrakeDiagramSvg";
 import { StepDisplay } from "@/components/common/StepDisplay";
 import { MaterialSelectorModal } from "@/components/common/MaterialSelectorModal";
 import { ScenarioControls } from "@/components/common/ScenarioControls";
-import { RotateCcw, Sparkles, Sliders, CheckCircle2 } from "lucide-react";
+import { RotateCcw, Sparkles, Sliders, CheckCircle2, Gauge } from "lucide-react";
 
 interface BlockBrakeStudioProps {
   triggerPreset?: string;
@@ -93,41 +93,43 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header & Preset Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm">
         <div>
           <div className="flex items-center space-x-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
-              <RotateCcw className="h-6 w-6" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0f172a] text-[#38bdf8] border border-[#1e293b] shadow-sm">
+              <RotateCcw className="h-5 w-5" />
             </span>
             <div>
-              <div className="flex items-center space-x-3">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
+              <div className="flex items-center space-x-2.5">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#0f172a]">
                   Block (Shoe) Brake Studio
                 </h1>
-                <span className="rounded-md bg-[#f6efff] px-3 py-1 text-xs font-black text-[#5624d0] border border-[#d8b4fe]">
-                  CO6 &bull; Eq 13.17
+                <span className="rounded bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-mono font-bold text-[#0369a1] border border-[#cbd5e1]">
+                  MODULE: BLOCK BRAKE &bull; Eq 13.17
                 </span>
               </div>
-              <p className="mt-1 text-sm font-semibold text-[#4b5563]">
-                Short shoe brake analysis: Cases 1–3, CW/CCW moment balance, self-locking boundary, heat &amp; energy.
+              <p className="mt-0.5 text-xs font-medium text-[#64748b]">
+                Fulcrum moment equilibrium, self-energizing / self-locking boundary criteria, and thermal energy dissipation.
               </p>
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-[#4b5563] mr-1">Exam Presets:</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#64748b] mr-1">
+            Presets:
+          </span>
           {(["B1","B2","B3","B4"] as const).map((p) => (
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-2.5 py-1 text-xs font-mono font-bold text-[#0f172a] hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#e0f2fe]/40 transition-all shadow-sm"
             >
               {p}
             </button>
           ))}
-          <div className="h-6 w-[1.5px] bg-[#d1d7dc] mx-1.5" />
+          <div className="h-5 w-[1px] bg-[#cbd5e1] mx-1.5" />
           <ScenarioControls
             module="block_brake"
             inputs={{ ...inputs, brakeCase, rotation }}
@@ -137,12 +139,16 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
       </div>
 
       {/* Case & Rotation Selector */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
-          <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-            Geometry Case (Pivot &amp; Ft Line)
-          </label>
-          <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#475569] flex items-center space-x-1.5">
+              <Sliders className="h-3.5 w-3.5 text-[#0284c7]" />
+              <span>Fulcrum Offset Case</span>
+            </label>
+            <span className="text-[10px] font-mono text-[#64748b]">Pivot Line vs Center</span>
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
             {[
               { id: "case1", label: "Case 1: c = 0" },
               { id: "case2", label: "Case 2: Ft between O & center" },
@@ -151,10 +157,10 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
               <button
                 key={c.id}
                 onClick={() => setBrakeCase(c.id as BlockBrakeCase)}
-                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-extrabold transition-all text-center ${
+                className={`rounded-md px-2 py-2 text-xs font-bold transition-all text-center border ${
                   brakeCase === c.id
-                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    ? "bg-[#0f172a] text-[#ffffff] border-[#0f172a] shadow-sm"
+                    : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
                 }`}
               >
                 {c.label}
@@ -163,10 +169,14 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           </div>
         </div>
 
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
-          <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-            Drum Rotation Direction
-          </label>
+        <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#475569] flex items-center space-x-1.5">
+              <RotateCcw className="h-3.5 w-3.5 text-[#0284c7]" />
+              <span>Drum Rotation Sense</span>
+            </label>
+            <span className="text-[10px] font-mono text-[#64748b]">Affects Ft Moment Sign</span>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             {[
               { id: "cw", label: "↻ Clockwise (CW)" },
@@ -175,10 +185,10 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
               <button
                 key={r.id}
                 onClick={() => setRotation(r.id as RotationDirection)}
-                className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+                className={`rounded-md px-2.5 py-2 text-xs font-bold transition-all border ${
                   rotation === r.id
-                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                    : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
                 }`}
               >
                 {r.label}
@@ -189,180 +199,207 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
       </div>
 
       {/* Main Grid: Inputs (5 cols) & Diagrams/Results (7 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm space-y-5">
-            <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5">
-              <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
-                <Sliders className="h-5 w-5 text-[#a435f0]" />
-                <span>Brake Geometry &amp; Loads</span>
-              </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-5 space-y-4">
+          <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#0f172a] flex items-center space-x-2">
+                  <Gauge className="h-4 w-4 text-[#0284c7]" />
+                  <span>Geometry &amp; Moment Arms</span>
+                </h3>
+                <span className="text-[11px] text-[#64748b]">Distances relative to fulcrum pivot O</span>
+              </div>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
+                className="flex items-center space-x-1.5 rounded-md bg-[#f1f5f9] hover:bg-[#e2e8f0] px-2.5 py-1 text-xs font-mono font-bold text-[#0369a1] border border-[#cbd5e1] transition-all"
               >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Pick Material</span>
+                <Sparkles className="h-3 w-3 text-[#0284c7]" />
+                <span>Lining Material</span>
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3.5">
+            <div className="space-y-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Drum Dia D [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Drum Dia D <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.D}
                     onChange={(e) => handleInput("D", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Effort Arm a [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Effort Arm a <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.a}
                     onChange={(e) => handleInput("a", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Fulcrum Arm b [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Fulcrum Arm b <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.b}
                     onChange={(e) => handleInput("b", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Offset c [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Offset c <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.c}
                     onChange={(e) => handleInput("c", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Contact Angle 2&theta; [&deg;]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Contact 2&theta; <span className="font-mono text-[#64748b]">[&deg;]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.contact2Theta}
                     onChange={(e) => handleInput("contact2Theta", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Friction Coeff &mu;</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Friction Coeff &mu;
+                  </label>
                   <input
                     type="text"
                     value={inputs.mu}
                     onChange={(e) => handleInput("mu", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Torque T [N·m]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Torque T <span className="font-mono text-[#64748b]">[N·m]</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="or F applied"
                     value={inputs.torqueNm}
                     onChange={(e) => handleInput("torqueNm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Applied Effort F [N]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Applied Force F <span className="font-mono text-[#64748b]">[N]</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="or T"
                     value={inputs.appliedForceN}
                     onChange={(e) => handleInput("appliedForceN", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Speed N [rpm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Speed N <span className="font-mono text-[#64748b]">[rpm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.speedRpm}
                     onChange={(e) => handleInput("speedRpm", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Braking Time t [s]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Braking Time t <span className="font-mono text-[#64748b]">[s]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.timeSec}
                     onChange={(e) => handleInput("timeSec", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Summary Results Badges (Punchy & Bold) */}
+          {/* Quick Summary Results Badges */}
           {s && (
-            <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#5624d0]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Operating Force F</span>
-                <p className={`mt-1 text-2xl sm:text-3xl font-black font-mono ${s.isSelfLocking ? "text-rose-600" : "text-[#5624d0]"}`}>
-                  {formatNum(s.operatingForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#2563eb]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Operating Effort F</span>
+                <p className={`mt-0.5 text-xl sm:text-2xl font-black font-mono ${s.isSelfLocking ? "text-rose-600" : "text-[#0f172a]"}`}>
+                  {formatNum(s.operatingForceN, 1)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">N</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
+                <span className="text-[11px] text-[#64748b] font-mono">
                   CW: {formatNum(s.operatingForceCwN, 0)} N | CCW: {formatNum(s.operatingForceCcwN, 0)} N
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Tangential Force Ft</span>
-                <p className="mt-1 text-2xl sm:text-3xl font-black text-[#1e6055] font-mono">
-                  {formatNum(s.tangentialForceN, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#059669]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Tangential Force Ft</span>
+                <p className="mt-0.5 text-xl sm:text-2xl font-black text-[#0f172a] font-mono">
+                  {formatNum(s.tangentialForceN, 1)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">N</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
+                <span className="text-[11px] text-[#059669] font-mono font-bold">
                   Fn = {formatNum(s.normalForceN, 1)} N
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#b4690e]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Heat Rate H</span>
-                <p className="mt-1 text-lg sm:text-xl font-black text-[#b4690e] font-mono">
-                  {formatNum(s.heatRateKw, 2)} <span className="text-sm font-extrabold text-[#4b5563]">kW</span>
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#d97706]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Thermal Rate H</span>
+                <p className="mt-0.5 text-base sm:text-lg font-black text-[#0f172a] font-mono">
+                  {formatNum(s.heatRateKw, 2)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">kW</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
+                <span className="text-[11px] text-[#64748b] font-mono">
                   v = {formatNum(s.surfaceSpeedMs, 2)} m/s
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Critical Offset c_crit</span>
-                <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
-                  {formatNum(s.criticalOffsetMm, 1)} <span className="text-sm font-extrabold text-[#4b5563]">mm</span>
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#0284c7]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Offset Limit c_crit</span>
+                <p className="mt-0.5 text-base sm:text-lg font-black text-[#0f172a] font-mono">
+                  {formatNum(s.criticalOffsetMm, 1)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">mm</span>
                 </p>
-                <span className={`text-xs font-black ${s.isSelfLocking ? "text-rose-600" : "text-[#1e6055]"}`}>
-                  {s.isSelfLocking ? "Self-Locking Active!" : "Safe (c < c_crit)"}
+                <span className={`text-[11px] font-mono font-bold ${s.isSelfLocking ? "text-rose-600" : "text-[#059669]"}`}>
+                  {s.isSelfLocking ? "Self-Locking Detected" : "Stable (c < c_crit)"}
                 </span>
               </div>
             </div>
           )}
         </div>
 
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-5">
           {s && (
             <BlockBrakeDiagramSvg
               D={s.drumDiaMm}
@@ -381,15 +418,15 @@ export const BlockBrakeStudio: React.FC<BlockBrakeStudioProps> = ({ triggerPrese
           )}
 
           {result.success && (
-            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
-              <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5 mb-4">
+            <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-3 mb-3.5">
                 <div>
-                  <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">
-                    <CheckCircle2 className="h-5 w-5 text-[#1e6055]" />
-                    <span>Deterministic Mathematical Derivations</span>
+                  <h3 className="text-sm font-bold text-[#0f172a] flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#059669]" />
+                    <span>Deterministic Mathematical Calculations</span>
                   </h3>
-                  <p className="text-xs font-semibold text-[#6b7280]">
-                    Moment equilibrium about fulcrum O, equivalent μ&apos;, and thermal power calculations.
+                  <p className="text-[11px] font-medium text-[#64748b]">
+                    Fulcrum O moment equilibrium, equivalent friction &mu;&apos;, and energy balance.
                   </p>
                 </div>
               </div>

@@ -8,7 +8,7 @@ import { BandBrakeDiagramSvg } from "./BandBrakeDiagramSvg";
 import { StepDisplay } from "@/components/common/StepDisplay";
 import { MaterialSelectorModal } from "@/components/common/MaterialSelectorModal";
 import { ScenarioControls } from "@/components/common/ScenarioControls";
-import { Disc, Sparkles, Sliders, CheckCircle2 } from "lucide-react";
+import { Disc, Sparkles, Sliders, CheckCircle2, Gauge, Scale } from "lucide-react";
 
 interface BandBrakeStudioProps {
   triggerPreset?: string;
@@ -102,41 +102,43 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
   const s = result.success && result.summary ? result.summary : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm">
         <div>
           <div className="flex items-center space-x-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f6efff] text-[#5624d0] border border-[#d8b4fe] shadow-sm">
-              <Disc className="h-6 w-6" />
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0f172a] text-[#38bdf8] border border-[#1e293b] shadow-sm">
+              <Disc className="h-5 w-5" />
             </span>
             <div>
-              <div className="flex items-center space-x-3">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
+              <div className="flex items-center space-x-2.5">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#0f172a]">
                   Band Brake Studio
                 </h1>
-                <span className="rounded-md bg-[#f6efff] px-3 py-1 text-xs font-black text-[#5624d0] border border-[#d8b4fe]">
-                  CO6 &bull; Eq 13.18–19
+                <span className="rounded bg-[#f1f5f9] px-2.5 py-0.5 text-[11px] font-mono font-bold text-[#0369a1] border border-[#cbd5e1]">
+                  MODULE: BAND BRAKE &bull; Eq 13.18–19
                 </span>
               </div>
-              <p className="mt-1 text-sm font-semibold text-[#4b5563]">
-                Simple and differential band brakes: tension ratio, band sizing, lever design, and self-locking boundary.
+              <p className="mt-0.5 text-xs font-medium text-[#64748b]">
+                Capstan tension ratio F1/F2 = e^(μθ), band thickness/width sizing, and differential lever moment equilibrium.
               </p>
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-black uppercase tracking-wider text-[#4b5563] mr-1">Exam Presets:</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#64748b] mr-1">
+            Presets:
+          </span>
           {(["BB1","BB2","BB3"] as const).map((p) => (
             <button
               key={p}
               onClick={() => loadPreset(p)}
-              className="rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-1.5 text-xs sm:text-sm font-mono font-black text-[#1c1d1f] hover:border-[#a435f0] hover:text-[#a435f0] hover:bg-[#f6efff]/40 transition-all shadow-sm"
+              className="rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-2.5 py-1 text-xs font-mono font-bold text-[#0f172a] hover:border-[#0284c7] hover:text-[#0284c7] hover:bg-[#e0f2fe]/40 transition-all shadow-sm"
             >
               {p}
             </button>
           ))}
-          <div className="h-6 w-[1.5px] bg-[#d1d7dc] mx-1.5" />
+          <div className="h-5 w-[1px] bg-[#cbd5e1] mx-1.5" />
           <ScenarioControls
             module="band_brake"
             inputs={{ ...inputs, brakeType, simpleCase, rotation }}
@@ -146,28 +148,31 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
       </div>
 
       {/* Type & Case Selector */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
-          <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-            Band Brake Type
-          </label>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#475569] flex items-center space-x-1.5">
+              <Sliders className="h-3.5 w-3.5 text-[#0284c7]" />
+              <span>Band Brake Topology</span>
+            </label>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setBrakeType("simple")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+              className={`rounded-md px-2.5 py-2 text-xs font-bold transition-all border ${
                 brakeType === "simple"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                  : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
               }`}
             >
               Simple Band
             </button>
             <button
               onClick={() => setBrakeType("differential")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+              className={`rounded-md px-2.5 py-2 text-xs font-bold transition-all border ${
                 brakeType === "differential"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                  : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
               }`}
             >
               Differential
@@ -176,27 +181,30 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
         </div>
 
         {brakeType === "simple" && (
-          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
-            <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-              Simple Band Geometry
-            </label>
+          <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm">
+            <div className="flex items-center justify-between mb-2.5">
+              <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#475569] flex items-center space-x-1.5">
+                <Scale className="h-3.5 w-3.5 text-[#0284c7]" />
+                <span>Simple Band Fulcrum</span>
+              </label>
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setSimpleCase("case_e")}
-                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+                className={`rounded-md px-2 py-2 text-xs font-bold transition-all border ${
                   simpleCase === "case_e"
-                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                    : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
                 }`}
               >
                 Case (e): Arm b
               </button>
               <button
                 onClick={() => setSimpleCase("case_d")}
-                className={`rounded-lg px-2.5 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+                className={`rounded-md px-2 py-2 text-xs font-bold transition-all border ${
                   simpleCase === "case_d"
-                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                    : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                    ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                    : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
                 }`}
               >
                 Case (d): Direct
@@ -205,27 +213,30 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
           </div>
         )}
 
-        <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-5 shadow-sm">
-          <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-            Rotation Direction
-          </label>
+        <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2.5">
+            <label className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#475569] flex items-center space-x-1.5">
+              <Disc className="h-3.5 w-3.5 text-[#0284c7]" />
+              <span>Rotation Direction</span>
+            </label>
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setRotation("cw")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+              className={`rounded-md px-2.5 py-2 text-xs font-bold transition-all border ${
                 rotation === "cw"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                  : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
               }`}
             >
               ↻ CW
             </button>
             <button
               onClick={() => setRotation("ccw")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-extrabold transition-all ${
+              className={`rounded-md px-2.5 py-2 text-xs font-bold transition-all border ${
                 rotation === "ccw"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 border-2 border-[#a435f0] scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border-2 border-[#d1d7dc] hover:bg-[#f7f9fa] hover:border-[#1c1d1f]"
+                  ? "bg-[#0f172a] text-white border-[#0f172a] shadow-sm"
+                  : "bg-[#f8fafc] text-[#334155] border-[#cbd5e1] hover:bg-[#ffffff] hover:border-[#0284c7]"
               }`}
             >
               ↺ CCW
@@ -235,193 +246,247 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
       </div>
 
       {/* Main Grid: Inputs (5 cols) & Diagrams/Results (7 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 space-y-5">
-          <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm space-y-5">
-            <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5">
-              <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
-                <Sliders className="h-5 w-5 text-[#a435f0]" />
-                <span>Band &amp; Lever Dimensions</span>
-              </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="lg:col-span-5 space-y-4">
+          <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-[#0f172a] flex items-center space-x-2">
+                  <Gauge className="h-4 w-4 text-[#0284c7]" />
+                  <span>Band &amp; Lever Dimensions</span>
+                </h3>
+                <span className="text-[11px] text-[#64748b]">Tension geometry and structural limits</span>
+              </div>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
-                className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white transition-all shadow-sm"
+                className="flex items-center space-x-1.5 rounded-md bg-[#f1f5f9] hover:bg-[#e2e8f0] px-2.5 py-1 text-xs font-mono font-bold text-[#0369a1] border border-[#cbd5e1] transition-all"
               >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>Pick Material</span>
+                <Sparkles className="h-3 w-3 text-[#0284c7]" />
+                <span>Lining Material</span>
               </button>
             </div>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3.5">
+            <div className="space-y-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Drum Dia D [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Drum Dia D <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.D}
                     onChange={(e) => handleInput("D", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Wrap Angle &theta; [&deg;]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Wrap Angle &theta; <span className="font-mono text-[#64748b]">[&deg;]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.theta_deg}
                     onChange={(e) => handleInput("theta_deg", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Friction Coeff &mu;</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Friction Coeff &mu;
+                  </label>
                   <input
                     type="text"
                     value={inputs.mu}
                     onChange={(e) => handleInput("mu", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Effort Arm a [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Effort Arm a <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.a}
                     onChange={(e) => handleInput("a", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
               {brakeType === "simple" ? (
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Attachment Arm b [mm]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Lever Arm b <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.b}
                     onChange={(e) => handleInput("b", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Arm b1 (short) [mm]</label>
+                    <label className="text-[#334155] font-bold text-xs block mb-1">
+                      Arm b1 <span className="font-mono text-[#64748b]">[mm]</span>
+                    </label>
                     <input
                       type="text"
                       value={inputs.b1}
                       onChange={(e) => handleInput("b1", e.target.value)}
-                      className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                      className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Arm b2 (long) [mm]</label>
+                    <label className="text-[#334155] font-bold text-xs block mb-1">
+                      Arm b2 <span className="font-mono text-[#64748b]">[mm]</span>
+                    </label>
                     <input
                       type="text"
                       value={inputs.b2}
                       onChange={(e) => handleInput("b2", e.target.value)}
-                      className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                      className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                     />
                   </div>
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Tangential Force Ft [N]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Tangential Ft <span className="font-mono text-[#64748b]">[N]</span>
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. 9000 or from P/N"
+                    placeholder="e.g. 9000"
                     value={inputs.Ft}
                     onChange={(e) => handleInput("Ft", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Power P [kW]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Torque T <span className="font-mono text-[#64748b]">[N·m]</span>
+                  </label>
                   <input
                     type="text"
-                    placeholder="e.g. 30"
-                    value={inputs.P_kW}
-                    onChange={(e) => handleInput("P_kW", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    placeholder="or Power/RPM"
+                    value={inputs.T_Nm}
+                    onChange={(e) => handleInput("T_Nm", e.target.value)}
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Band Tensile &sigma;_band [MPa]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Band Thick h <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 5"
+                    value={inputs.h}
+                    onChange={(e) => handleInput("h", e.target.value)}
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Band Width b&apos; <span className="font-mono text-[#64748b]">[mm]</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="or calculated"
+                    value={inputs.b_prime}
+                    onChange={(e) => handleInput("b_prime", e.target.value)}
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Band Tensile &sigma;_band <span className="font-mono text-[#64748b]">[MPa]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.sigma_d_band}
                     onChange={(e) => handleInput("sigma_d_band", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-[#1f2937] font-extrabold text-xs block mb-1.5">Lever Bending &sigma;_lever [MPa]</label>
+                  <label className="text-[#334155] font-bold text-xs block mb-1">
+                    Lever Bending &sigma;_lever <span className="font-mono text-[#64748b]">[MPa]</span>
+                  </label>
                   <input
                     type="text"
                     value={inputs.sigma_lever}
                     onChange={(e) => handleInput("sigma_lever", e.target.value)}
-                    className="w-full rounded-lg border-2 border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#111827] font-mono text-sm font-bold focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none shadow-sm transition-all"
+                    className="w-full rounded-md border border-[#cbd5e1] bg-[#f8fafc] px-3 py-1.5 text-[#0f172a] font-mono text-xs font-bold placeholder-[#94a3b8] focus:border-[#0284c7] focus:outline-none transition-all"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Quick Summary Results Badges (Punchy & Bold) */}
+          {/* Quick Summary Results Badges */}
           {s && (
-            <div className="grid grid-cols-2 gap-3.5">
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#b32d0f]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Tight Side F1</span>
-                <p className="mt-1 text-2xl sm:text-3xl font-black text-[#b32d0f] font-mono">
-                  {formatNum(s.F1, 0)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#2563eb]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Tight Side Tension F1</span>
+                <p className="mt-0.5 text-xl sm:text-2xl font-black text-[#0f172a] font-mono">
+                  {formatNum(s.F1, 0)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">N</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
-                  Slack F2 = {formatNum(s.F2, 0)} N
+                <span className="text-[11px] text-[#64748b] font-mono">
+                  Slack Side F2 = {formatNum(s.F2, 0)} N
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#5624d0]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Operating Force F</span>
-                <p className="mt-1 text-2xl sm:text-3xl font-black text-[#5624d0] font-mono">
-                  {formatNum(s.F_operating, 1)} <span className="text-sm font-extrabold text-[#4b5563]">N</span>
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#059669]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Operating Force F</span>
+                <p className="mt-0.5 text-xl sm:text-2xl font-black text-[#0f172a] font-mono">
+                  {formatNum(s.F_operating, 1)}{" "}
+                  <span className="text-xs font-bold text-[#64748b]">N</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
+                <span className="text-[11px] text-[#059669] font-mono font-bold">
                   CW: {formatNum(s.F_cw, 0)} N | CCW: {formatNum(s.F_ccw, 0)} N
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1c1d1f]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Band Cross-Section</span>
-                <p className="mt-1 text-lg sm:text-xl font-black text-[#1c1d1f] font-mono">
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#0284c7]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Band Cross-Section</span>
+                <p className="mt-0.5 text-base sm:text-lg font-black text-[#0f172a] font-mono">
                   {formatNum(s.b_prime, 1)} &times; {formatNum(s.h, 1)}{" "}
-                  <span className="text-sm font-extrabold text-[#4b5563]">mm</span>
+                  <span className="text-xs font-bold text-[#64748b]">mm</span>
                 </p>
-                <span className="text-xs text-[#6b7280] font-mono font-bold">
+                <span className="text-[11px] text-[#64748b] font-mono">
                   p_avg = {formatNum(s.p_avg, 3)} MPa
                 </span>
               </div>
 
-              <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-4 text-center shadow-sm hover:border-[#1e6055]/50 transition-all">
-                <span className="text-xs font-mono uppercase font-black text-[#6b7280]">Lever Section (k=2)</span>
-                <p className="mt-1 text-lg sm:text-xl font-black text-[#1e6055] font-mono">
+              <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-3.5 shadow-sm border-l-4 border-l-[#d97706]">
+                <span className="text-[10px] font-mono uppercase font-bold text-[#64748b]">Lever Section (k=2)</span>
+                <p className="mt-0.5 text-base sm:text-lg font-black text-[#0f172a] font-mono">
                   {s.lever_bl && s.lever_hl ? `${formatNum(s.lever_bl, 1)} × ${formatNum(s.lever_hl, 1)} mm` : "N/A"}
                 </p>
-                <span className={`text-xs font-black ${s.isSelfLocking ? "text-rose-600" : "text-[#1e6055]"}`}>
-                  {s.isSelfLocking ? "Self-Locking Active!" : "Non-Locking"}
+                <span className={`text-[11px] font-mono font-bold ${s.isSelfLocking ? "text-rose-600" : "text-[#059669]"}`}>
+                  {s.isSelfLocking ? "Self-Locking Detected" : "Non-Locking Design"}
                 </span>
               </div>
             </div>
           )}
         </div>
 
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-5">
           {s && (
             <BandBrakeDiagramSvg
               D={s.D}
@@ -437,15 +502,15 @@ export const BandBrakeStudio: React.FC<BandBrakeStudioProps> = ({ triggerPreset 
           )}
 
           {result.success && (
-            <div className="rounded-2xl border-2 border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm">
-              <div className="flex items-center justify-between border-b-2 border-[#e4e8eb] pb-3.5 mb-4">
+            <div className="rounded-xl border border-[#cbd5e1] bg-[#ffffff] p-5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#f1f5f9] pb-3 mb-3.5">
                 <div>
-                  <h3 className="text-base sm:text-lg font-black text-[#1c1d1f] flex items-center space-x-2">
-                    <CheckCircle2 className="h-5 w-5 text-[#1e6055]" />
-                    <span>Deterministic Mathematical Derivations</span>
+                  <h3 className="text-sm font-bold text-[#0f172a] flex items-center space-x-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#059669]" />
+                    <span>Deterministic Mathematical Calculations</span>
                   </h3>
-                  <p className="text-xs font-semibold text-[#6b7280]">
-                    Belt formula F1/F2 = e^(μθ), band sizing, and lever bending calculations per Chapter 13.
+                  <p className="text-[11px] font-medium text-[#64748b]">
+                    Belt formula F1/F2 = e^(μθ), band thickness/width sizing, and lever bending derivations.
                   </p>
                 </div>
               </div>
