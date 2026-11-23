@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   Sliders,
   Scale,
-  Star,
+  Compass,
+  Info,
 } from "lucide-react";
 
 interface ClutchStudioProps {
@@ -217,9 +218,37 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
   const s = result.success && result.summary ? result.summary : null;
 
+  // Calculation mode descriptions
+  const modeDescriptions: Record<ClutchSolveMode, { title: string; desc: string; inputsHighlight: string; solves: string }> = {
+    sizing: {
+      title: "Design Dimensions (Do, Di)",
+      desc: "Finds the required outer diameter (Do) and inner diameter (Di) of the clutch plate needed to transmit the target torque without exceeding allowable friction pressure.",
+      inputsHighlight: "Power/Torque, Diameter ratio (Di/Do), and Allowable pressure",
+      solves: "Outer diameter (Do), Inner diameter (Di), and Clamping force (Fa)",
+    },
+    plate_count: {
+      title: "Find Required Plates (n1, n2)",
+      desc: "For fixed clutch dimensions (Do, Di), computes how many friction pairs (n') and discs (n1 driving + n2 driven) are required to safely handle the torque.",
+      inputsHighlight: "Fixed Outer/Inner diameters and Target torque",
+      solves: "Active friction pairs (n') rounded to standard discs, and actual required clamping force",
+    },
+    capacity: {
+      title: "Torque & Power Capacity",
+      desc: "Calculates the maximum torque (T) and power (P) that an existing clutch of known dimensions and plate count can transmit.",
+      inputsHighlight: "Known Do, Di, number of plates, and friction coefficient",
+      solves: "Maximum transmissible Torque T [N·m] and Power P [kW]",
+    },
+    force_limited: {
+      title: "Spring Force Limited",
+      desc: "When the maximum axial clamping force (Fa) is constrained by human effort or spring capacity, calculates the plate count and working pressures.",
+      inputsHighlight: "Maximum axial spring limit [N] and Outer diameter",
+      solves: "Required friction pairs (n') and resulting working surface pressure",
+    },
+  };
+
   return (
     <div className="space-y-6 animate-fade-in-scale">
-      {/* Udemy Course Header Banner */}
+      {/* Header Banner */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-xl border border-[#d1d7dc] bg-[#f7f9fa] p-6 shadow-sm transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
         <div>
           <div className="flex items-center space-x-3">
@@ -227,19 +256,12 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               <Layers className="h-6 w-6" />
             </span>
             <div>
-              <div className="flex items-center space-x-3">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
-                  Clutch Design &amp; Sizing Studio
-                </h1>
-              </div>
-              <div className="flex items-center space-x-2 text-xs text-[#6a6f73] mt-1">
-                <div className="flex items-center text-[#e59819]">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-current" />
-                  ))}
-                </div>
-                <span className="font-bold text-[#b4690e]">4.9 (4,40,545 ratings)</span>
-              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1c1d1f]">
+                Clutch Design &amp; Sizing Studio
+              </h1>
+              <p className="text-xs text-[#6a6f73] mt-0.5">
+                Calculate dimensions, plate count, torque capacity, and clamping forces.
+              </p>
             </div>
           </div>
         </div>
@@ -269,17 +291,20 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
       {/* Control Bar: Mode & Theory Switchers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Mode Selector */}
+        {/* Mode Selector with Clear Visual Clarification */}
         <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
-          <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] mb-3 block">
-            Calculation Mode
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f] flex items-center space-x-1.5">
+              <Compass className="h-4 w-4 text-[#a435f0]" />
+              <span>What do you want to calculate?</span>
+            </label>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
             {[
-              { id: "sizing", label: "B: Sizing (Do, Di)" },
-              { id: "plate_count", label: "C: Plate Count" },
-              { id: "capacity", label: "A: Capacity (T, P)" },
-              { id: "force_limited", label: "D: Fa-Limited" },
+              { id: "sizing", label: "Plate Sizing (Do, Di)" },
+              { id: "plate_count", label: "Plate Count (n)" },
+              { id: "capacity", label: "Torque Capacity (T)" },
+              { id: "force_limited", label: "Force Limited (Fa)" },
             ].map((m) => (
               <button
                 key={m.id}
@@ -294,46 +319,63 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
               </button>
             ))}
           </div>
+
+          {/* Mode Explanatory Card */}
+          <div className="bg-[#f6efff]/50 border border-[#d8b4fe] rounded-lg p-2.5 text-xs text-[#2d2f31] flex items-start space-x-2">
+            <Info className="h-4 w-4 text-[#a435f0] shrink-0 mt-0.5" />
+            <div>
+              <p className="font-black text-[#5624d0]">{modeDescriptions[mode].title}</p>
+              <p className="text-[11px] text-[#4b5563] mt-0.5">{modeDescriptions[mode].desc}</p>
+              <div className="mt-1 flex flex-wrap gap-2 text-[10px] font-mono">
+                <span className="text-[#6a6f73]">Solves: <strong className="text-[#1c1d1f] font-sans">{modeDescriptions[mode].solves}</strong></span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Theory Selector */}
-        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40">
-          <div className="flex items-center justify-between mb-3">
-            <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f]">
-              Theory Model
-            </label>
-            <label className="flex items-center space-x-2 text-xs font-bold text-[#1c1d1f] cursor-pointer">
-              <input
-                type="checkbox"
-                checked={compareBoth}
-                onChange={(e) => setCompareBoth(e.target.checked)}
-                className="h-4 w-4 rounded border-[#d1d7dc] text-[#a435f0] focus:ring-[#a435f0]"
-              />
-              <span className="text-xs font-black text-[#5624d0]">Compare Wear vs. Pressure</span>
-            </label>
+        <div className="rounded-xl border border-[#d1d7dc] bg-white p-5 shadow-sm transition-all hover:border-[#1c1d1f]/40 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-xs sm:text-sm font-black uppercase tracking-wider text-[#1c1d1f]">
+                Pressure Distribution Theory
+              </label>
+              <label className="flex items-center space-x-2 text-xs font-bold text-[#1c1d1f] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={compareBoth}
+                  onChange={(e) => setCompareBoth(e.target.checked)}
+                  className="h-4 w-4 rounded border-[#d1d7dc] text-[#a435f0] focus:ring-[#a435f0]"
+                />
+                <span className="text-xs font-black text-[#5624d0]">Compare Wear vs. Pressure</span>
+              </label>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setTheory("uniform_wear")}
+                className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
+                  theory === "uniform_wear"
+                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
+                    : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
+                }`}
+              >
+                Uniform Wear (Standard)
+              </button>
+              <button
+                onClick={() => setTheory("uniform_pressure")}
+                className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
+                  theory === "uniform_pressure"
+                    ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
+                    : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
+                }`}
+              >
+                Uniform Pressure (New)
+              </button>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => setTheory("uniform_wear")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
-                theory === "uniform_wear"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
-              }`}
-            >
-              Uniform Wear (Standard)
-            </button>
-            <button
-              onClick={() => setTheory("uniform_pressure")}
-              className={`rounded-lg px-3 py-2.5 text-xs sm:text-sm font-black transition-all duration-200 hover:-translate-y-0.5 active:scale-95 ${
-                theory === "uniform_pressure"
-                  ? "bg-[#a435f0] text-white shadow-md shadow-[#a435f0]/25 scale-[1.02]"
-                  : "bg-[#f7f9fa] text-[#2d2f31] border border-[#d1d7dc] hover:bg-white hover:border-[#a435f0]"
-              }`}
-            >
-              Uniform Pressure (New)
-            </button>
-          </div>
+          <p className="text-[11px] text-[#6a6f73] mt-2">
+            <strong>Uniform Wear:</strong> Standard for worn/running clutches (pr = const). <strong>Uniform Pressure:</strong> Applies to brand-new clutches with rigid flat discs.
+          </p>
         </div>
       </div>
 
@@ -343,10 +385,13 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
         <div className="lg:col-span-5 space-y-5">
           <div className="rounded-xl border border-[#d1d7dc] bg-white p-6 shadow-sm space-y-5 transition-all hover:border-[#1c1d1f]/40 hover:shadow-md">
             <div className="flex items-center justify-between border-b border-[#e4e8eb] pb-3.5">
-              <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
-                <Sliders className="h-5 w-5 text-[#a435f0]" />
-                <span>Operating Parameters &amp; Geometry</span>
-              </h3>
+              <div>
+                <h3 className="text-sm sm:text-base font-black text-[#1c1d1f] flex items-center space-x-2">
+                  <Sliders className="h-5 w-5 text-[#a435f0]" />
+                  <span>Input Parameters</span>
+                </h3>
+                <p className="text-[11px] text-[#6a6f73]">Fill relevant inputs; solved variables update dynamically.</p>
+              </div>
               <button
                 onClick={() => setIsMaterialModalOpen(true)}
                 className="flex items-center space-x-1.5 rounded-lg bg-[#f6efff] border border-[#d8b4fe] px-3 py-1.5 text-xs font-black text-[#5624d0] hover:bg-[#a435f0] hover:text-white hover:-translate-y-0.5 active:scale-95 transition-all duration-200 shadow-sm"
@@ -435,7 +480,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                   <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Outer Dia Do [mm]</label>
                   <input
                     type="text"
-                    placeholder="e.g. 250 or solved"
+                    placeholder={mode === "sizing" ? "Solved automatically" : "e.g. 250"}
                     value={inputs.diaOuterMm}
                     onChange={(e) => handleInputChange("diaOuterMm", e.target.value)}
                     className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
@@ -445,7 +490,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                   <label className="text-[#1c1d1f] font-black text-xs block mb-1.5">Inner Dia Di [mm]</label>
                   <input
                     type="text"
-                    placeholder="e.g. 150 or solved"
+                    placeholder={mode === "sizing" ? "Solved automatically" : "e.g. 150"}
                     value={inputs.diaInnerMm}
                     onChange={(e) => handleInputChange("diaInnerMm", e.target.value)}
                     className="w-full rounded-lg border border-[#d1d7dc] bg-[#f7f9fa] px-3.5 py-2.5 text-[#1c1d1f] font-mono text-sm font-bold placeholder-[#9ca3af] focus:border-[#a435f0] focus:ring-2 focus:ring-[#a435f0]/20 focus:outline-none transition-all"
@@ -518,7 +563,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
             </div>
           </div>
 
-          {/* Quick Summary Results Badges (Udemy Style Cards with Lift Animations) */}
+          {/* Quick Summary Results Badges */}
           {result.success && result.summary && (
             <div className="grid grid-cols-2 gap-3.5">
               <div className="rounded-xl border border-[#d1d7dc] bg-white p-4 text-center shadow-sm hover:border-[#a435f0] hover:-translate-y-1 hover:shadow-md transition-all duration-200">
@@ -569,18 +614,23 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
 
         {/* Right Column: Visualizations & KaTeX Step Workings (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Interactive SVG Diagram */}
+          {/* Interactive SVG Diagram with Explanation */}
           {result.success && result.summary && (
-            <ClutchDiagramSvg
-              Do={result.summary.diaOuterMm}
-              Di={result.summary.diaInnerMm}
-              Dm={result.summary.meanDiaMm}
-              n1={result.summary.numDrivingDiscs}
-              n2={result.summary.numDrivenDiscs}
-              nPrime={result.summary.numFrictionSurfaces}
-              Fa={result.summary.actualAxialForceN || result.summary.axialForceN}
-              theory={theory}
-            />
+            <div className="space-y-2">
+              <ClutchDiagramSvg
+                Do={result.summary.diaOuterMm}
+                Di={result.summary.diaInnerMm}
+                Dm={result.summary.meanDiaMm}
+                n1={result.summary.numDrivingDiscs}
+                n2={result.summary.numDrivenDiscs}
+                nPrime={result.summary.numFrictionSurfaces}
+                Fa={result.summary.actualAxialForceN || result.summary.axialForceN}
+                theory={theory}
+              />
+              <p className="text-[11px] text-[#6a6f73] px-1">
+                <strong>Diagram Guide:</strong> Left side displays the friction disc contact ring (outer diameter Do, inner hole Di, and mean effective diameter Dm). Right side depicts the disc pack stack ({result.summary.numDrivingDiscs} purple driving discs keyed to input shaft, interleaved with {result.summary.numDrivenDiscs} dark driven discs) clamped by axial force Fa.
+              </p>
+            </div>
           )}
 
           {/* Side-by-Side Comparison Card if toggled */}
@@ -695,7 +745,7 @@ export const ClutchStudio: React.FC<ClutchStudioProps> = ({ triggerPreset }) => 
                     <span>Deterministic Mathematical Derivations</span>
                   </h3>
                   <p className="text-xs font-semibold text-[#6a6f73]">
-                    Step-by-step analytical equations and substitutions.
+                    Step-by-step analytical equations and substitutions for {modeDescriptions[mode].title}.
                   </p>
                 </div>
               </div>
